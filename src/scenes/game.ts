@@ -77,10 +77,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  getPressureFromDepth(depth: number) {
-    return 5 + depth * 5;
-  }
-
   diveAction() {
     console.log("Dive!")
     this.setDepth(this.currentDepth + 1);
@@ -101,6 +97,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.tick(this.getPressureFromDepth(this.currentDepth));
+    this.submarine.tick(this.currentDepth);
   }
 }

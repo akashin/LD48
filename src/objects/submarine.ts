@@ -1,7 +1,7 @@
 import { CONST } from '../const';
 
 export class Submarine extends Phaser.GameObjects.Container {
-  hullStrength: number = 10;
+  hullStrength: number = 2;
   hullHealth: number = 100;
 
   submarineSprite: Phaser.GameObjects.Sprite;
@@ -27,9 +27,9 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.updateView();
   }
 
-  tick(pressure: number): void {
-    if (this.hullStrength < pressure) {
-      let damage = pressure - this.hullStrength;
+  tick(depth: number): void {
+    if (this.hullStrength < depth) {
+      let damage = depth - this.hullStrength;
       this.takeDamage(damage);
     }
 

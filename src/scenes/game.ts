@@ -21,12 +21,12 @@ export default class GameScene extends Phaser.Scene {
     let submarine = new Submarine(this, {});
     this.add.existing(submarine);
 
-    this.addAction('Explore', this.exploreAction);
-    this.addAction('Dive', this.diveAction);
-    this.addAction('Repair', this.repairAction);
+    this.addAction('Explore', (pointer: any) => this.exploreAction());
+    this.addAction('Dive', (pointer: any) => this.diveAction());
+    this.addAction('Repair', (pointer: any) => this.repairAction());
   }
 
-  addAction(text: string, onClick) {
+  addAction(text: string, onClick: any) {
     var actionText = this.add.text(
       10, 10 + (24 + 10) * this.actions.length, text, { color: 'white', fontSize: '24pt' }
     )
@@ -35,15 +35,15 @@ export default class GameScene extends Phaser.Scene {
     this.actions.push(actionText);
   }
 
-  exploreAction(pointer: any) {
+  exploreAction() {
     console.log("Explore!")
   }
 
-  diveAction(pointer: any) {
+  diveAction() {
     console.log("Dive!")
   }
 
-  repairAction(pointer: any) {
+  repairAction() {
     console.log("Repair!")
   }
 }

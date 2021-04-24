@@ -43,7 +43,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 
-    this.addAction('Dive Deeper', (pointer: any) => this.newDiveAction());
+    this.addAction('Dive Deeper', (pointer: any) => this.chooseEncounter());
 
     let skill0 = new Skill(this);
     let skill1 = new Skill(this);
@@ -68,7 +68,7 @@ export default class GameScene extends Phaser.Scene {
     this.currentDepthText.setText("Depth: " + String(depth));
   }
 
-  newDiveAction() {
+  chooseEncounter() {
     console.log("Dive!")
     if (this.nextEncounters != undefined) {
       console.log("Next encounters are already chosen.");
@@ -83,9 +83,8 @@ export default class GameScene extends Phaser.Scene {
     this.add.existing(this.encounterWindow);
   }
 
-  resolveEncounter(index: number) {
+  resolveEncounter(encounter: Encounter) {
     if (this.encounterWindow != undefined && this.nextEncounters != undefined) {
-      let encounter = this.nextEncounters[index];
       console.log("Resolving encounter ", encounter)
 
       if (encounter.damage !== undefined) {

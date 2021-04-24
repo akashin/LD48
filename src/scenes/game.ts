@@ -43,6 +43,7 @@ export default class GameScene extends Phaser.Scene {
     this.addAction('Ascend', (pointer: any) => this.ascendAction());
     this.addAction('Dive', (pointer: any) => this.diveAction());
     this.addAction('Repair', (pointer: any) => this.repairAction());
+    this.addAction('Upgrade', (pointer: any) => this.upgradeAction());
   }
 
   setDepth(depth: number) {
@@ -107,12 +108,23 @@ export default class GameScene extends Phaser.Scene {
   }
 
   repairAction() {
-    if (this.submarine.loot >= CONST.repairCost) {
-      this.submarine.addLoot(-CONST.repairCost);
+    if (this.submarine.enoughLoot(CONST.repairCost)) {
+      this.submarine.useLoot(CONST.repairCost);
       this.submarine.repair(CONST.repairAmount);
       this.showActionOutcome("Repaired")
     } else {
       this.showActionOutcome("Not enough loot to repair")
+    }
+  }
+
+  upgradeAction() {
+    var upgradeCost = 5 * (2 ** this.currentDepth);
+    if (this.submarine.enoughLoot(upgradeCost)) {
+      this.showActionOutcome("Upgraded");
+      this.submarine.useLoot(upgradeCost);
+      this.submarine.upgradeHull();
+    } else {
+      this.showActionOutcome("Not enough loot to upgrade\n, need " + String(upgradeCost));
     }
   }
 

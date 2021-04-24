@@ -87,6 +87,11 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.updateView();
   }
 
+  upgradeHull(): void {
+    this.hullStrength += 1;
+    this.updateView();
+  }
+
   private updateView(): void {
     this.infoText.setText('HP: ' + this.hullHealth + ', Strength: ' + this.hullStrength);
     this.resourcesText.setText('Oxygen: ' + this.oxygen + ', Loot: ' + this.loot);

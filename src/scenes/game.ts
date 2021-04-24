@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { Submarine } from '../objects/submarine';
 
-export default class Demo extends Phaser.Scene {
+export default class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
   }

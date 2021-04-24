@@ -61,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   showActionOutcome(outcome_text: string) {
-    console.log(outcome_text);
+    // console.log(outcome_text);
     this.actionOutcomeText.setText(outcome_text);
   }
 

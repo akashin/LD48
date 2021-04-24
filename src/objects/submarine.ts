@@ -37,11 +37,15 @@ export class Submarine extends Phaser.GameObjects.Container {
   takeDamage(amount: number): void {
     this.hullHealth = Math.max(0, this.hullHealth - amount);
 
+    console.log('Took ' + amount + ' damage, HP = ' + this.hullHealth);
+
     this.updateView();
   }
 
   repair(amount: number): void {
     this.hullHealth = Math.min(CONST.maxHullHealth, this.hullHealth + amount);
+
+    console.log('Repaired ' + amount + ' HP, HP = ' + this.hullHealth);
 
     this.updateView();
   }
@@ -49,11 +53,15 @@ export class Submarine extends Phaser.GameObjects.Container {
   useOxygen(amount: number): void {
     this.oxygen = Math.max(0, this.oxygen - amount);
 
+    console.log('Used ' + amount + ' oxygen, OX = ' + this.oxygen);
+
     this.updateView();
   }
 
   addOxygen(amount: number): void {
     this.oxygen = Math.min(CONST.maxOxygen, this.oxygen + amount);
+
+    console.log('Added ' + amount + ' oxygen, OX = ' + this.oxygen);
 
     this.updateView();
   }
@@ -65,6 +73,7 @@ export class Submarine extends Phaser.GameObjects.Container {
   useLoot(amount: number): void {
     if (this.enoughLoot(amount)) {
       this.loot -= amount;
+      console.log('Used ' + amount + ' loot, loot = ' + this.loot);
     }
 
     this.updateView();
@@ -72,6 +81,8 @@ export class Submarine extends Phaser.GameObjects.Container {
 
   addLoot(amount: number): void {
     this.loot += amount;
+
+    console.log('Added ' + amount + ' loot, loot = ' + this.loot);
 
     this.updateView();
   }

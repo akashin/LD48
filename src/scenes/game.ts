@@ -62,14 +62,17 @@ export default class GameScene extends Phaser.Scene {
     switch (event) {
       case 0: {
         console.log("Take damage");
+        this.submarine.takeDamage(5);
         break;
       }
       case 1: {
         console.log("Get loot");
+        this.submarine.addLoot(10);
         break;
       }
       case 2: {
         console.log("Get oxygen");
+        this.submarine.addOxygen(25);
         break;
       }
     }
@@ -99,6 +102,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.applyPressure(this.getPressureFromDepth(this.currentDepth));
+    this.submarine.tick(this.getPressureFromDepth(this.currentDepth));
   }
 }

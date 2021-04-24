@@ -70,6 +70,13 @@ export default class GameScene extends Phaser.Scene {
   onActionEnd(): void {
     this.submarine.useOxygen(CONST.oxygenPerAction);
     this.submarine.applyPressure(this.currentDepth);
+
+    if (this.submarine.oxygen == 0) {
+      alert("Your ran out of oxygen!");
+    }
+    if (this.submarine.hullHealth == 0) {
+      alert("Your hull was breached!");
+    }
   }
 
   exploreAction() {

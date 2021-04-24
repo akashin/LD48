@@ -8,4 +8,7 @@ export let CONST = {
   // Submarine
   maxHullHealth: 10,
   maxOxygen: 10,
+
+  // Costs.
+  repairCost: 10,
 }

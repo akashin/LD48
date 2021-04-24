@@ -83,8 +83,13 @@ export default class GameScene extends Phaser.Scene {
   }
 
   repairAction() {
-    console.log("Repair!")
-    this.submarine.hullHealth += 10;
+    if (this.submarine.loot >= CONST.repairCost) {
+      console.log("Repaired!")
+      this.submarine.addLoot(-CONST.repairCost);
+      this.submarine.hullHealth += 10;
+    } else {
+      console.log("Not enough loot to repair!")
+    }
   }
 
   update(time: number, delta: number): void {

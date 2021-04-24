@@ -36,7 +36,7 @@ export default class GameScene extends Phaser.Scene {
     this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });
     this.setDepth(0);
 
-    this.actionOutcomeText = this.add.text(gameWidth * 0.5, gameHeight * 0.1, "",
+    this.actionOutcomeText = this.add.text(gameWidth * 0.5 - 100, gameHeight * 0.1, "",
                                            { color: 'white', fontSize: '24pt' });
 
     this.addAction('Explore', (pointer: any) => this.exploreAction());
@@ -70,18 +70,18 @@ export default class GameScene extends Phaser.Scene {
     var event = randomInt(3);
     switch (event) {
       case 0: {
-        this.submarine.takeDamage(5);
+        this.submarine.takeDamage(CONST.exploreDamage);
         this.showActionOutcome("You were damaged");
         break;
       }
       case 1: {
-        console.log("Get loot");
-        this.submarine.addLoot(10);
-        this.showActionOutcome("You got loot");
+        var loot = 1 + randomInt(2 ** (this.currentDepth + 1));
+        this.submarine.addLoot(loot);
+        this.showActionOutcome("You got " + String(loot) + " loot");
         break;
       }
       case 2: {
-        this.submarine.addOxygen(25);
+        this.submarine.addOxygen(CONST.exploreOxygenIncome);
         this.showActionOutcome("You got oxygen");
         break;
       }
@@ -97,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
   repairAction() {
     if (this.submarine.loot >= CONST.repairCost) {
       this.submarine.addLoot(-CONST.repairCost);
-      this.submarine.repair(10);
+      this.submarine.repair(CONST.repairAmount);
       this.showActionOutcome("Repaired")
     } else {
       this.showActionOutcome("Not enough loot to repair")

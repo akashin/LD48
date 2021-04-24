@@ -140,7 +140,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   upgradeAction() {
-    var upgradeCost = 5 * (2 ** this.currentDepth);
+    var upgradeCost = 5 * (2 ** this.submarine.hullStrength);
     if (this.submarine.enoughLoot(upgradeCost)) {
       this.showActionOutcome("Upgraded");
       this.submarine.useLoot(upgradeCost);

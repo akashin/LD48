@@ -102,6 +102,7 @@ export default class GameScene extends Phaser.Scene {
 
       this.encounterWindow.destroy();
       this.nextEncounters = undefined;
+      this.setDepth(this.currentDepth + 1);
     }
   }
 

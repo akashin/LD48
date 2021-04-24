@@ -23,5 +23,11 @@ export class Submarine extends Phaser.GameObjects.Container {
 
     let damage = pressure - this.hullStrength;
     this.hullHealth = Math.max(0, this.hullHealth - damage);
+
+    this.updateInfo();
+  }
+
+  private updateInfo(): void {
+    this.infoText.setText('HP: ' + this.hullHealth + ', Strength: ' + this.hullStrength);
   }
 }

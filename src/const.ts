@@ -1,17 +1,17 @@
 export let CONST = {
-  tickDuration: 100,
+  tickDuration: 10,
   actionTextSize: 24,
 
   // Explore outcomes.
   exploreDamage: 2,
-  exploreOxygenIncome: 3,
+  exploreOxygenIncome: 4,
 
   // Resources
   oxygenPerAction: 1,
 
   // Submarine
   maxHullHealth: 10,
-  maxOxygen: 10,
+  maxOxygen: 100,
 
   // Repair.
   repairCost: 1,

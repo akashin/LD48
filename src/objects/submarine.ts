@@ -9,7 +9,7 @@ export class Submarine extends Phaser.GameObjects.Container {
   resourcesText: Phaser.GameObjects.Text;
 
   oxygen: number = CONST.maxOxygen;
-  loot: number = 0;
+  loot: number = 5;
 
   constructor(scene: Phaser.Scene, params: object) {
     super(scene, 0, 0);

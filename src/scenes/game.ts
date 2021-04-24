@@ -15,6 +15,8 @@ export default class GameScene extends Phaser.Scene {
 
   private actionOutcomeText!: Phaser.GameObjects.Text;
 
+  private qKey!: Phaser.Input.Keyboard.Key;
+
   constructor() {
     super('GameScene');
     this.actions = new Array<Phaser.GameObjects.Text>();
@@ -44,6 +46,8 @@ export default class GameScene extends Phaser.Scene {
     this.addAction('Dive', (pointer: any) => this.diveAction());
     this.addAction('Repair', (pointer: any) => this.repairAction());
     this.addAction('Upgrade', (pointer: any) => this.upgradeAction());
+
+    this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
   }
 
   setDepth(depth: number) {
@@ -132,11 +136,11 @@ export default class GameScene extends Phaser.Scene {
       this.submarine.useLoot(CONST.repairCost);
       this.submarine.repair(CONST.repairAmount);
       this.showActionOutcome("Repaired")
+
+      this.onActionEnd();
     } else {
       this.showActionOutcome("Not enough loot to repair")
     }
-
-    this.onActionEnd();
   }
 
   upgradeAction() {
@@ -145,6 +149,8 @@ export default class GameScene extends Phaser.Scene {
       this.showActionOutcome("Upgraded");
       this.submarine.useLoot(upgradeCost);
       this.submarine.upgradeHull();
+
+      this.onActionEnd();
     } else {
       this.showActionOutcome("Not enough loot to upgrade\n, need " + String(upgradeCost));
     }
@@ -160,6 +166,17 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    // this.submarine.applyPressure(this.currentDepth);
+    if (this.qKey.isDown) {
+      this.upgradeAction();
+      if (this.submarine.hullStrength > this.currentDepth) {
+        this.diveAction();
+      }
+
+      if (this.submarine.hullHealth <= 2) {
+        this.repairAction();
+      } else {
+        this.exploreAction();
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { Submarine } from '../objects/Submarine';
 
 export default class Demo extends Phaser.Scene {
   constructor() {
@@ -7,6 +8,8 @@ export default class Demo extends Phaser.Scene {
 
   preload() {
     this.load.image('logo', 'assets/phaser3-logo.png');
+    this.load.image('hammer', 'assets/hammer.png');
+    this.load.image('submarine', 'assets/submarine.png');
   }
 
   create() {
@@ -20,5 +23,8 @@ export default class Demo extends Phaser.Scene {
       yoyo: true,
       repeat: -1
     });
+
+    let submarine = new Submarine(this, {});
+    this.add.existing(submarine);
   }
 }

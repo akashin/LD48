@@ -18,8 +18,6 @@ export default class GameScene extends Phaser.Scene {
   private currentDepth: number = 0;
   private currentDepthText!: Phaser.GameObjects.Text;
 
-  private actionOutcomeText!: Phaser.GameObjects.Text;
-
   private qKey!: Phaser.Input.Keyboard.Key;
 
   constructor() {
@@ -42,9 +40,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });
     this.setDepth(0);
-
-    this.actionOutcomeText = this.add.text(gameWidth * 0.5 - 100, gameHeight * 0.1, "",
-                                           { color: 'white', fontSize: '24pt' });
 
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 
@@ -115,96 +110,6 @@ export default class GameScene extends Phaser.Scene {
     actionText.setInteractive();
     actionText.on('pointerdown', onClick);
     this.actions.push(actionText);
-  }
-
-  showActionOutcome(outcome_text: string) {
-    // console.log(outcome_text);
-    this.actionOutcomeText.setText(outcome_text);
-  }
-
-  onActionEnd(): void {
-    this.submarine.useOxygen(CONST.oxygenPerAction);
-    this.submarine.applyPressure(this.currentDepth);
-
-    if (this.submarine.oxygen == 0) {
-      alert("Your ran out of oxygen!");
-    }
-    if (this.submarine.hullHealth == 0) {
-      alert("Your hull was breached!");
-    }
-  }
-
-  exploreAction() {
-    console.log("Explore!")
-    var event = randomInt(3);
-    switch (event) {
-      case 0: {
-        this.submarine.takeDamage(CONST.exploreDamage);
-        this.showActionOutcome("You were damaged");
-        break;
-      }
-      case 1: {
-        var loot = 1 + randomInt(2 ** (this.currentDepth + 1));
-        this.submarine.addLoot(loot);
-        this.showActionOutcome("You got " + String(loot) + " loot");
-        break;
-      }
-      case 2: {
-        this.submarine.addOxygen(CONST.exploreOxygenIncome);
-        this.showActionOutcome("You got oxygen");
-        break;
-      }
-    }
-
-    this.onActionEnd();
-  }
-
-  ascendAction(): void {
-    if (this.currentDepth == 0) {
-      console.log("You can't ascend more");
-      return;
-    }
-
-    console.log("Ascend!")
-    this.setDepth(this.currentDepth - 1);
-    this.showActionOutcome("You ascended back!");
-
-    this.onActionEnd();
-  }
-
-  diveAction() {
-    this.submarine.applyPressure(this.currentDepth);
-
-    this.onActionEnd();
-
-    console.log("Dive!")
-    this.setDepth(this.currentDepth + 1);
-    this.showActionOutcome("You dived deeper!");
-  }
-
-  repairAction() {
-    if (this.submarine.enoughLoot(CONST.repairCost)) {
-      this.submarine.useLoot(CONST.repairCost);
-      this.submarine.repair(CONST.repairAmount);
-      this.showActionOutcome("Repaired")
-
-      this.onActionEnd();
-    } else {
-      this.showActionOutcome("Not enough loot to repair")
-    }
-  }
-
-  upgradeAction() {
-    var upgradeCost = 5 * (2 ** this.submarine.hullStrength);
-    if (this.submarine.enoughLoot(upgradeCost)) {
-      this.showActionOutcome("Upgraded");
-      this.submarine.useLoot(upgradeCost);
-      this.submarine.upgradeHull();
-
-      this.onActionEnd();
-    } else {
-      this.showActionOutcome("Not enough loot to upgrade\n, need " + String(upgradeCost));
-    }
   }
 
   update(time: number, delta: number): void {

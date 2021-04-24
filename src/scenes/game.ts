@@ -35,7 +35,7 @@ export default class GameScene extends Phaser.Scene {
     var gameHeight = this.game.config.height as number;
 
     this.submarine = new Submarine(this, {});
-    this.submarine.setPosition(200, 200);
+    this.submarine.setPosition(200, 150);
     this.add.existing(this.submarine);
 
     this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });

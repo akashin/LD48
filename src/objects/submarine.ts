@@ -1,9 +1,6 @@
 import { CONST } from '../const';
 
 export class Submarine extends Phaser.GameObjects.Container {
-  depthRating: number = 2;
-  depthRatingText: Phaser.GameObjects.Text;
-
   oxygen: number = CONST.maxOxygen;
   oxygenText: Phaser.GameObjects.Text;
 
@@ -11,11 +8,9 @@ export class Submarine extends Phaser.GameObjects.Container {
   hullHealthText: Phaser.GameObjects.Text;
 
   submarineSprite: Phaser.GameObjects.Sprite;
-  infoText: Phaser.GameObjects.Text;
-  resourcesText: Phaser.GameObjects.Text;
 
-  oxygen: number = CONST.maxOxygen;
   loot: number = 5;
+  lootText: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, params: object) {
     super(scene, 0, 0);
@@ -24,30 +19,17 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.submarineSprite.setScale(0.2, 0.2);
     this.add(this.submarineSprite);
 
-    this.infoText = new Phaser.GameObjects.Text(scene, 0, 0, '', {color: 'white', fontSize: '12pt'});
-    this.add(this.infoText);
-
-    this.resourcesText = new Phaser.GameObjects.Text(scene, 0, 12, '', {color: 'white', fontSize: '12pt'});
-    this.add(this.resourcesText);
-
     this.oxygenText = scene.add.text(30, 70, '', {color: 'white', fontSize: '12pt'});
     this.add(this.oxygenText);
     this.setOxygen(CONST.maxOxygen);
 
-    this.depthRatingText = scene.add.text(30, 90, '', {color: 'white', fontSize: '12pt'});
-    this.add(this.depthRatingText);
-    this.setDepthRating(2);
-
-    this.hullHealthText = scene.add.text(30, 110, '', {color: 'white', fontSize: '12pt'});
+    this.hullHealthText = scene.add.text(30, 90, '', {color: 'white', fontSize: '12pt'});
     this.add(this.hullHealthText);
     this.setHullHealth(CONST.maxHullHealth);
 
-    this.updateView();
-  }
-
-  setDepthRating(depthRating: number) {
-    this.depthRating = depthRating;
-    this.depthRatingText.setText('Depth rating: ' + depthRating);
+    this.lootText = scene.add.text(30, 110, '', {color: 'white', fontSize: '12pt'});
+    this.add(this.lootText);
+    this.setLoot(5);
   }
 
   setHullHealth(hullHealth: number) {
@@ -55,16 +37,14 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.hullHealthText.setText('Hull health: ' + hullHealth);
   }
 
+  setLoot(loot: number) {
+    this.loot = loot;
+    this.lootText.setText('Loot: ' + loot);
+  }
+
   setOxygen(oxygen: number) {
     this.oxygen = oxygen;
     this.oxygenText.setText('Oxygen: ' + oxygen);
-  }
-
-  applyPressure(depth: number): void {
-    if (this.depthRating < depth) {
-      let damage = depth - this.depthRating;
-      this.takeDamage(damage);
-    }
   }
 
   takeDamage(amount: number): void {
@@ -93,26 +73,13 @@ export class Submarine extends Phaser.GameObjects.Container {
 
   useLoot(amount: number): void {
     if (this.enoughLoot(amount)) {
-      this.loot -= amount;
+      this.setLoot(this.loot - amount);
       console.log('Used ' + amount + ' loot, loot = ' + this.loot);
     }
-
-    this.updateView();
   }
 
   addLoot(amount: number): void {
-    this.loot += amount;
-
+    this.setLoot(this.loot + amount);
     console.log('Added ' + amount + ' loot, loot = ' + this.loot);
-
-    this.updateView();
-  }
-
-  upgradeHull(): void {
-    this.depthRating += 1;
-  }
-
-  private updateView(): void {
-    this.resourcesText.setText('Loot: ' + this.loot);
   }
 }

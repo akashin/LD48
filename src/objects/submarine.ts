@@ -8,6 +8,7 @@ export class Submarine extends Phaser.GameObjects.Container {
   oxygenText: Phaser.GameObjects.Text;
 
   hullHealth: number = CONST.maxHullHealth;
+  hullHealthText: Phaser.GameObjects.Text;
 
   submarineSprite: Phaser.GameObjects.Sprite;
   infoText: Phaser.GameObjects.Text;
@@ -37,12 +38,21 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.add(this.depthRatingText);
     this.setDepthRating(2);
 
+    this.hullHealthText = scene.add.text(30, 110, '', {color: 'white', fontSize: '12pt'});
+    this.add(this.hullHealthText);
+    this.setHullHealth(CONST.maxHullHealth);
+
     this.updateView();
   }
 
   setDepthRating(depthRating: number) {
     this.depthRating = depthRating;
     this.depthRatingText.setText('Depth rating: ' + depthRating);
+  }
+
+  setHullHealth(hullHealth: number) {
+    this.hullHealth = hullHealth;
+    this.hullHealthText.setText('Hull health: ' + hullHealth);
   }
 
   setOxygen(oxygen: number) {
@@ -58,19 +68,13 @@ export class Submarine extends Phaser.GameObjects.Container {
   }
 
   takeDamage(amount: number): void {
-    this.hullHealth = Math.max(0, this.hullHealth - amount);
-
+    this.setHullHealth(Math.max(0, this.hullHealth - amount));
     console.log('Took ' + amount + ' damage, HP = ' + this.hullHealth);
-
-    this.updateView();
   }
 
   repair(amount: number): void {
-    this.hullHealth = Math.min(CONST.maxHullHealth, this.hullHealth + amount);
-
+    this.setHullHealth(Math.min(CONST.maxHullHealth, this.hullHealth + amount));
     console.log('Repaired ' + amount + ' HP, HP = ' + this.hullHealth);
-
-    this.updateView();
   }
 
   useOxygen(amount: number): void {
@@ -109,7 +113,6 @@ export class Submarine extends Phaser.GameObjects.Container {
   }
 
   private updateView(): void {
-    this.infoText.setText('HP: ' + this.hullHealth);
     this.resourcesText.setText('Loot: ' + this.loot);
   }
 }

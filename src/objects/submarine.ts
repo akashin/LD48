@@ -2,13 +2,13 @@ import { CONST } from '../const';
 
 export class Submarine extends Phaser.GameObjects.Container {
   hullStrength: number = 2;
-  hullHealth: number = 100;
+  hullHealth: number = CONST.maxHullHealth;
 
   submarineSprite: Phaser.GameObjects.Sprite;
   infoText: Phaser.GameObjects.Text;
   resourcesText: Phaser.GameObjects.Text;
 
-  oxygen: number = 1000;
+  oxygen: number = CONST.maxOxygen;
   loot: number = 0;
 
   constructor(scene: Phaser.Scene, params: object) {
@@ -27,25 +27,45 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.updateView();
   }
 
-  tick(depth: number): void {
+  applyPressure(depth: number): void {
     if (this.hullStrength < depth) {
       let damage = depth - this.hullStrength;
       this.takeDamage(damage);
     }
+  }
 
-    this.oxygen = Math.max(0, this.oxygen - CONST.oxygenPerTick);
+  takeDamage(amount: number): void {
+    this.hullHealth = Math.max(0, this.hullHealth - amount);
 
     this.updateView();
   }
 
-  takeDamage(damage: number): void {
-    this.hullHealth = Math.max(0, this.hullHealth - damage);
+  repair(amount: number): void {
+    this.hullHealth = Math.min(CONST.maxHullHealth, this.hullHealth + amount);
+
+    this.updateView();
+  }
+
+  useOxygen(amount: number): void {
+    this.oxygen = Math.max(0, this.oxygen - amount);
 
     this.updateView();
   }
 
   addOxygen(amount: number): void {
-    this.oxygen += amount;
+    this.oxygen = Math.min(CONST.maxOxygen, this.oxygen + amount);
+
+    this.updateView();
+  }
+
+  enoughLoot(amount: number): boolean {
+    return this.loot >= amount;
+  }
+
+  useLoot(amount: number): void {
+    if (this.enoughLoot(amount)) {
+      this.loot -= amount;
+    }
 
     this.updateView();
   }

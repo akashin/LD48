@@ -97,6 +97,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.tick(this.currentDepth);
+    this.submarine.applyPressure(this.currentDepth);
   }
 }

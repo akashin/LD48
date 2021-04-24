@@ -4,4 +4,8 @@ export let CONST = {
 
   // Resources
   oxygenPerTick: 1,
+
+  // Submarine
+  maxHullHealth: 10,
+  maxOxygen: 10,
 }

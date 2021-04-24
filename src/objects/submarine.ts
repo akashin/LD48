@@ -6,7 +6,7 @@ export class Submarine extends Phaser.GameObjects.Container {
   infoText: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, params: object) {
-    super(scene, 100, 100);
+    super(scene, 0, 0);
 
     this.submarineSprite = new Phaser.GameObjects.Sprite(scene, 0, 0, 'submarine');
     this.submarineSprite.setScale(0.2, 0.2);

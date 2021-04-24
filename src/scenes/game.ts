@@ -25,6 +25,7 @@ export default class GameScene extends Phaser.Scene {
     var gameHeight = this.game.config.height as number;
 
     this.submarine = new Submarine(this, {});
+    this.submarine.setPosition(200, 200);
     this.add.existing(this.submarine);
 
     this.addAction('Explore', (pointer: any) => this.exploreAction());

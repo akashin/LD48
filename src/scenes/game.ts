@@ -10,6 +10,8 @@ export default class GameScene extends Phaser.Scene {
 
   private timeSinceLastTick: number = 0;
 
+  private waterPressure: number = 10;
+
   constructor() {
     super('GameScene');
     this.actions = new Array<Phaser.GameObjects.Text>();
@@ -65,10 +67,12 @@ export default class GameScene extends Phaser.Scene {
 
   diveAction() {
     console.log("Dive!")
+    this.waterPressure += 5;
   }
 
   repairAction() {
     console.log("Repair!")
+    this.submarine.hullHealth += 10;
   }
 
   update(time: number, delta: number): void {
@@ -81,6 +85,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.applyPressure(11);
+    this.submarine.applyPressure(this.waterPressure);
   }
 }

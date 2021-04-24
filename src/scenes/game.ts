@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { Submarine } from '../objects/Submarine';
+import { Submarine } from '../objects/submarine';
 
 export default class Demo extends Phaser.Scene {
   constructor() {

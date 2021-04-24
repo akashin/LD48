@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { CONST } from '../const';
+import { Skill } from '../objects/skill';
 import { Submarine } from '../objects/submarine';
 import { Encounter, EncounterWindow } from '../objects/encounter_window';
 import { randomInt } from '../utils/math'
@@ -46,7 +47,25 @@ export default class GameScene extends Phaser.Scene {
                                            { color: 'white', fontSize: '24pt' });
 
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+
     this.addAction('Dive Deeper', (pointer: any) => this.newDiveAction());
+
+    let skill0 = new Skill(this);
+    let skill1 = new Skill(this);
+    skill0.setPosition(300, 300);
+    skill1.setPosition(460, 300);
+    this.add.existing(skill0);
+    this.add.existing(skill1);
+
+    this.tweens.add({
+      targets: skill0,
+      // delay: randomInt(1000),
+      y: 310,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sin.easeOut',
+      duration: 1000,
+    });
   }
 
   setDepth(depth: number) {
@@ -197,17 +216,5 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    if (this.qKey.isDown) {
-      this.upgradeAction();
-      if (this.submarine.hullStrength > this.currentDepth) {
-        this.diveAction();
-      }
-
-      if (this.submarine.hullHealth <= 2) {
-        this.repairAction();
-      } else {
-        this.exploreAction();
-      }
-    }
   }
 }

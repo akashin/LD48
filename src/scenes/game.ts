@@ -32,6 +32,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addAction(text: string, onClick: any) {
+    // TODO: Turn these into a prettier images.
     var actionText = this.add.text(
       10, 10 + (24 + 10) * this.actions.length, text, { color: 'white', fontSize: '24pt' }
     )

@@ -26,7 +26,7 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
   }
 
   chooseEncounter(encounter: Encounter) {
-    var summaryText = "";
+    var summaryText = "Summary: ";
     if (encounter.damage !== undefined) {
       summaryText += "damage: " + encounter.damage + "\n";
     }

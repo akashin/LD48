@@ -67,6 +67,11 @@ export default class GameScene extends Phaser.Scene {
     this.actionOutcomeText.setText(outcome_text);
   }
 
+  onActionEnd(): void {
+    this.submarine.useOxygen(CONST.oxygenPerAction);
+    this.submarine.applyPressure(this.currentDepth);
+  }
+
   exploreAction() {
     console.log("Explore!")
     var event = randomInt(3);
@@ -88,6 +93,8 @@ export default class GameScene extends Phaser.Scene {
         break;
       }
     }
+
+    this.onActionEnd();
   }
 
   ascendAction(): void {
@@ -99,9 +106,15 @@ export default class GameScene extends Phaser.Scene {
     console.log("Ascend!")
     this.setDepth(this.currentDepth - 1);
     this.showActionOutcome("You ascended back!");
+
+    this.onActionEnd();
   }
 
   diveAction() {
+    this.submarine.applyPressure(this.currentDepth);
+
+    this.onActionEnd();
+
     console.log("Dive!")
     this.setDepth(this.currentDepth + 1);
     this.showActionOutcome("You dived deeper!");
@@ -115,6 +128,8 @@ export default class GameScene extends Phaser.Scene {
     } else {
       this.showActionOutcome("Not enough loot to repair")
     }
+
+    this.onActionEnd();
   }
 
   upgradeAction() {
@@ -138,6 +153,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.applyPressure(this.currentDepth);
+    // this.submarine.applyPressure(this.currentDepth);
   }
 }

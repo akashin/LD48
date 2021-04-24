@@ -7,7 +7,7 @@ export let CONST = {
   exploreOxygenIncome: 3,
 
   // Resources
-  oxygenPerTick: 1,
+  oxygenPerAction: 1,
 
   // Submarine
   maxHullHealth: 10,

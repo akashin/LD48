@@ -40,6 +40,7 @@ export default class GameScene extends Phaser.Scene {
                                            { color: 'white', fontSize: '24pt' });
 
     this.addAction('Explore', (pointer: any) => this.exploreAction());
+    this.addAction('Ascend', (pointer: any) => this.ascendAction());
     this.addAction('Dive', (pointer: any) => this.diveAction());
     this.addAction('Repair', (pointer: any) => this.repairAction());
   }
@@ -86,6 +87,17 @@ export default class GameScene extends Phaser.Scene {
         break;
       }
     }
+  }
+
+  ascendAction(): void {
+    if (this.currentDepth == 0) {
+      console.log("You can't ascend more");
+      return;
+    }
+
+    console.log("Ascend!")
+    this.setDepth(this.currentDepth - 1);
+    this.showActionOutcome("You ascended back!");
   }
 
   diveAction() {

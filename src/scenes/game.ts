@@ -1,12 +1,16 @@
 import Phaser from 'phaser';
 import { CONST } from '../const';
 import { Submarine } from '../objects/submarine';
+import { Encounter, EncounterWindow } from '../objects/encounter_window';
 import { randomInt } from '../utils/math'
 
 export default class GameScene extends Phaser.Scene {
   private actions: Array<Phaser.GameObjects.Text>;
 
   private submarine!: Submarine;
+
+  private encounterWindow?: EncounterWindow = undefined;
+  private nextEncounters?: Array<Encounter> = undefined;
 
   private timeSinceLastTick: number = 0;
 
@@ -41,18 +45,45 @@ export default class GameScene extends Phaser.Scene {
     this.actionOutcomeText = this.add.text(gameWidth * 0.5 - 100, gameHeight * 0.1, "",
                                            { color: 'white', fontSize: '24pt' });
 
-    this.addAction('Explore', (pointer: any) => this.exploreAction());
-    this.addAction('Ascend', (pointer: any) => this.ascendAction());
-    this.addAction('Dive', (pointer: any) => this.diveAction());
-    this.addAction('Repair', (pointer: any) => this.repairAction());
-    this.addAction('Upgrade', (pointer: any) => this.upgradeAction());
-
     this.qKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    this.addAction('Dive Deeper', (pointer: any) => this.newDiveAction());
   }
 
   setDepth(depth: number) {
     this.currentDepth = depth;
     this.currentDepthText.setText("Depth: " + String(depth));
+  }
+
+  newDiveAction() {
+    console.log("Dive!")
+    if (this.nextEncounters != undefined) {
+      console.log("Next encounters are already chosen.");
+      return;
+    }
+
+    this.nextEncounters = new Array<Encounter>();
+    this.nextEncounters.push(new Encounter("Repair", { repair: 1 }));
+    this.nextEncounters.push(new Encounter("Fight", { damage: 1 }));
+    this.nextEncounters.push(new Encounter("Search", {}));
+    this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, (i: number) => this.resolveEncounter(i));
+    this.add.existing(this.encounterWindow);
+  }
+
+  resolveEncounter(index: number) {
+    if (this.encounterWindow != undefined && this.nextEncounters != undefined) {
+      let encounter = this.nextEncounters[index];
+      console.log("Resolving encounter ", encounter)
+
+      if (encounter.damage !== undefined) {
+        this.submarine.takeDamage(encounter.damage);
+      }
+      if (encounter.repair !== undefined) {
+        this.submarine.repair(encounter.repair);
+      }
+
+      this.encounterWindow.destroy();
+      this.nextEncounters = undefined;
+    }
   }
 
   addAction(text: string, onClick: any) {

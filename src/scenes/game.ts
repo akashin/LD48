@@ -13,6 +13,8 @@ export default class GameScene extends Phaser.Scene {
   private currentDepth: number = 0;
   private currentDepthText!: Phaser.GameObjects.Text;
 
+  private actionOutcomeText!: Phaser.GameObjects.Text;
+
   constructor() {
     super('GameScene');
     this.actions = new Array<Phaser.GameObjects.Text>();
@@ -33,6 +35,9 @@ export default class GameScene extends Phaser.Scene {
 
     this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });
     this.setDepth(0);
+
+    this.actionOutcomeText = this.add.text(gameWidth * 0.5, gameHeight * 0.1, "",
+                                           { color: 'white', fontSize: '24pt' });
 
     this.addAction('Explore', (pointer: any) => this.exploreAction());
     this.addAction('Dive', (pointer: any) => this.diveAction());
@@ -55,23 +60,29 @@ export default class GameScene extends Phaser.Scene {
     this.actions.push(actionText);
   }
 
+  showActionOutcome(outcome_text: string) {
+    console.log(outcome_text);
+    this.actionOutcomeText.setText(outcome_text);
+  }
+
   exploreAction() {
     console.log("Explore!")
     var event = randomInt(3);
     switch (event) {
       case 0: {
-        console.log("Take damage");
         this.submarine.takeDamage(5);
+        this.showActionOutcome("You were damaged");
         break;
       }
       case 1: {
         console.log("Get loot");
         this.submarine.addLoot(10);
+        this.showActionOutcome("You got loot");
         break;
       }
       case 2: {
-        console.log("Get oxygen");
         this.submarine.addOxygen(25);
+        this.showActionOutcome("You got oxygen");
         break;
       }
     }
@@ -80,15 +91,16 @@ export default class GameScene extends Phaser.Scene {
   diveAction() {
     console.log("Dive!")
     this.setDepth(this.currentDepth + 1);
+    this.showActionOutcome("You dived deeper!");
   }
 
   repairAction() {
     if (this.submarine.loot >= CONST.repairCost) {
-      console.log("Repaired!")
       this.submarine.addLoot(-CONST.repairCost);
       this.submarine.hullHealth += 10;
+      this.showActionOutcome("Repaired")
     } else {
-      console.log("Not enough loot to repair!")
+      this.showActionOutcome("Not enough loot to repair")
     }
   }
 

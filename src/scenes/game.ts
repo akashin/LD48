@@ -1,8 +1,13 @@
 import Phaser from 'phaser';
+import { CONST } from '../const';
 import { Submarine } from '../objects/submarine';
 
 export default class GameScene extends Phaser.Scene {
   private actions: Array<Phaser.GameObjects.Text>;
+
+  private submarine!: Submarine;
+
+  private timeSinceLastTick: number = 0;
 
   constructor() {
     super('GameScene');
@@ -18,8 +23,8 @@ export default class GameScene extends Phaser.Scene {
     var gameWidth = this.game.config.width as number;
     var gameHeight = this.game.config.height as number;
 
-    let submarine = new Submarine(this, {});
-    this.add.existing(submarine);
+    this.submarine = new Submarine(this, {});
+    this.add.existing(this.submarine);
 
     this.addAction('Explore', (pointer: any) => this.exploreAction());
     this.addAction('Dive', (pointer: any) => this.diveAction());
@@ -45,5 +50,18 @@ export default class GameScene extends Phaser.Scene {
 
   repairAction() {
     console.log("Repair!")
+  }
+
+  update(time: number, delta: number): void {
+    this.timeSinceLastTick += delta;
+
+    while (this.timeSinceLastTick >= CONST.tickDuration) {
+      this.timeSinceLastTick -= CONST.tickDuration;
+      this.tick();
+    }
+  }
+
+  tick(): void {
+    this.submarine.applyPressure(11);
   }
 }

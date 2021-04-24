@@ -10,7 +10,8 @@ export default class GameScene extends Phaser.Scene {
 
   private timeSinceLastTick: number = 0;
 
-  private waterPressure: number = 10;
+  private currentDepth: number = 0;
+  private currentDepthText!: Phaser.GameObjects.Text;
 
   constructor() {
     super('GameScene');
@@ -30,9 +31,17 @@ export default class GameScene extends Phaser.Scene {
     this.submarine.setPosition(200, 200);
     this.add.existing(this.submarine);
 
+    this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });
+    this.setDepth(0);
+
     this.addAction('Explore', (pointer: any) => this.exploreAction());
     this.addAction('Dive', (pointer: any) => this.diveAction());
     this.addAction('Repair', (pointer: any) => this.repairAction());
+  }
+
+  setDepth(depth: number) {
+    this.currentDepth = depth;
+    this.currentDepthText.setText("Depth: " + String(depth));
   }
 
   addAction(text: string, onClick: any) {
@@ -42,6 +51,7 @@ export default class GameScene extends Phaser.Scene {
       { color: 'white', fontSize: String(CONST.actionTextSize) + 'pt' }
     )
     actionText.setInteractive();
+    // TODO: Only activate on direct click.
     actionText.on('pointerup', onClick);
     this.actions.push(actionText);
   }
@@ -65,9 +75,13 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
+  getPressureFromDepth(depth: number) {
+    return 5 + depth * 5;
+  }
+
   diveAction() {
     console.log("Dive!")
-    this.waterPressure += 5;
+    this.setDepth(this.currentDepth + 1);
   }
 
   repairAction() {
@@ -85,6 +99,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   tick(): void {
-    this.submarine.applyPressure(this.waterPressure);
+    this.submarine.applyPressure(this.getPressureFromDepth(this.currentDepth));
   }
 }

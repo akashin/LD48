@@ -51,8 +51,7 @@ export default class GameScene extends Phaser.Scene {
       { color: 'white', fontSize: String(CONST.actionTextSize) + 'pt' }
     )
     actionText.setInteractive();
-    // TODO: Only activate on direct click.
-    actionText.on('pointerup', onClick);
+    actionText.on('pointerdown', onClick);
     this.actions.push(actionText);
   }
 

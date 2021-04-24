@@ -12,8 +12,10 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.submarineSprite.setScale(0.2, 0.2);
     this.add(this.submarineSprite);
 
-    this.infoText = new Phaser.GameObjects.Text(scene, 0, 0, 'hello', {color: 'white', fontSize: '14pt'});
+    this.infoText = new Phaser.GameObjects.Text(scene, 0, 0, '', {color: 'white', fontSize: '14pt'});
     this.add(this.infoText);
+
+    this.updateInfo();
   }
 
   applyPressure(pressure: number) {

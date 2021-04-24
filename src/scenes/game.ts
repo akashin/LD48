@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { CONST } from '../const';
 import { Submarine } from '../objects/submarine';
+import { randomInt } from '../utils/math'
 
 export default class GameScene extends Phaser.Scene {
   private actions: Array<Phaser.GameObjects.Text>;
@@ -44,6 +45,21 @@ export default class GameScene extends Phaser.Scene {
 
   exploreAction() {
     console.log("Explore!")
+    var event = randomInt(3);
+    switch (event) {
+      case 0: {
+        console.log("Take damage");
+        break;
+      }
+      case 1: {
+        console.log("Get loot");
+        break;
+      }
+      case 2: {
+        console.log("Get oxygen");
+        break;
+      }
+    }
   }
 
   diveAction() {

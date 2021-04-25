@@ -109,7 +109,7 @@ export default class GameScene extends Phaser.Scene {
 
   generateEncounterOutcome(encounter: Encounter): EncounterOutcome {
     let outcome = new EncounterOutcome();
-    outcome.roll = 1 + randomInt(20) + this.submarine.getAttribute(encounter.type);
+    outcome.roll = 1 + randomInt(10) + this.submarine.getAttribute(encounter.type);
     outcome.checkDifficulty = thresholdByDifficulty(encounter.difficulty) + Math.floor(this.currentDepth / 10);
     outcome.success = outcome.roll >= outcome.checkDifficulty;
     if (outcome.success) {

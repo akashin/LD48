@@ -12,14 +12,14 @@ export function resourcesByDifficulty(difficulty: Difficulty): number {
 export function thresholdByDifficulty(difficulty: Difficulty): number {
   switch (difficulty) {
     // Should give 80% success.
-    // 5..20 out of 20
-    case Difficulty.EASY: return 5;
+    // 3..10 out of 10
+    case Difficulty.EASY: return 3;
     // Should give 50% success.
-    // 11..20 out of 20
-    case Difficulty.MEDIUM: return 11;
-    // Should give 33% success.
-    // 15..20 out of 20
-    case Difficulty.HARD: return 15;
+    // 6..10 out of 10
+    case Difficulty.MEDIUM: return 6;
+    // Should give 30% success.
+    // 8..10 out of 10
+    case Difficulty.HARD: return 8;
   }
 }
 

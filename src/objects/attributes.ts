@@ -52,9 +52,9 @@ export class AttributesUI extends Phaser.GameObjects.Container {
   update(): void {
     // this.titleText.setText('Skills:' + this.submarine.freeAttributesToSpend);
     this.titleText.setText('Skills:');
-    this.updateAttributeText(this.attributeTexts[0], 'Crafting', this.submarine.enginePower, this.submarine.freeAttributesToSpend);
-    this.updateAttributeText(this.attributeTexts[1], 'Fighting', this.submarine.firePower, this.submarine.freeAttributesToSpend);
-    this.updateAttributeText(this.attributeTexts[2], 'Exploration', this.submarine.navigation, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[0], 'Fighting', this.submarine.firePower, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[1], 'Exploration', this.submarine.navigation, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[2], 'Crafting', this.submarine.enginePower, this.submarine.freeAttributesToSpend);
   }
 
   private updateAttributeText(attributeText: Phaser.GameObjects.Text, attributeName: string, level: number, freeAttributes: number): void {

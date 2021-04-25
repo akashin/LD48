@@ -16,6 +16,9 @@ export let CONST = {
   // Repair.
   repairCost: 1,
   repairAmount: 2,
+
+  // Colors
+  difficulyLevelColor: [0xff6600, 0xffb700, 0xf7ff00],
 }
 
 export let GRAPHICS_CONST = {

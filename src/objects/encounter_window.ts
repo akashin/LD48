@@ -1,4 +1,4 @@
-import { GRAPHICS_CONST } from '../const';
+import { CONST, GRAPHICS_CONST } from '../const';
 
 export class Encounter {
   title: string
@@ -12,52 +12,114 @@ export class Encounter {
   }
 }
 
-export class EncounterWindow extends Phaser.GameObjects.Container {
-  onEncounterChosen: any;
-  encounters: Array<Phaser.GameObjects.Container>;
+export class EncounterCard extends Phaser.GameObjects.Container {
+  private encounter: Encounter;
+  private difficultyBar: Phaser.GameObjects.Container;
 
-  constructor(scene: Phaser.Scene, params: object, encounters: any, onEncounterChosen: any) {
-    super(scene, 0, 0);
-    this.onEncounterChosen = onEncounterChosen;
-    this.encounters = new Array<Phaser.GameObjects.Container>();
+  constructor(scene: Phaser.Scene, encounter: Encounter) {
+    super(scene);
+    this.encounter = encounter;
 
-    for (let i = 0; i < encounters.length; ++i) {
-      var encounterContainter = this.makeEncounterContainer(encounters[i]);
-      encounterContainter.setX(50 + i * (GRAPHICS_CONST.encounderCardWidth + 10));
-      encounterContainter.setY(50);
-      this.add(encounterContainter);
-      this.encounters.push(encounterContainter);
-      encounterContainter.on('pointerdown', (pointer: any) => this.chooseEncounter(encounters[i]));
-    }
-  }
+    let W = GRAPHICS_CONST.encounderCardWidth;
+    let H = GRAPHICS_CONST.encounderCardHeight;
 
-  makeEncounterContainer(encounter: Encounter): Phaser.GameObjects.Container {
-    let encounterContainer = new Phaser.GameObjects.Container(this.scene, 0, 0);
-
-    let encounterBg = new Phaser.GameObjects.Rectangle(
-      this.scene, 0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight, 0x6666FF);
-    encounterBg.setOrigin(0, 0);
-    encounterContainer.add(encounterBg);
+    let encounterBg = new Phaser.GameObjects.Rectangle(this.scene, W / 2, H / 2, W, H, 0x6666FF);
+    // encounterBg.setInteractive();
+    encounterBg.on('pointerover', () => {
+      scene.tweens.add({
+        targets: encounterBg,
+        displayWidth: W + 10,
+        displayHeight: H + 10,
+        duration: 50,
+        ease: 'Sin',
+      });
+    }, this)
+    encounterBg.on('pointerout', () => {
+      scene.tweens.add({
+        targets: encounterBg,
+        displayWidth: W + 0,
+        displayHeight: H + 0,
+        duration: 50,
+        ease: 'Sin',
+      });
+    })
+    this.add(encounterBg);
 
     let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
     encounterSprite.setOrigin(0, 0);
     encounterSprite.setDisplaySize(128, 128);
-    encounterContainer.add(encounterSprite);
+    this.add(encounterSprite);
 
-    let encounterText = new Phaser.GameObjects.Text(
-      this.scene, 10, 128 + 10, encounter.title, {color: 'white', fontSize: '12pt'});
-    encounterContainer.add(encounterText);
+    let encounterText = new Phaser.GameObjects.Text(this.scene, 10, 128 + 10, encounter.title, {color: 'white', fontSize: '12pt'});
+    this.add(encounterText);
 
-    encounterContainer.setInteractive(
-      new Phaser.Geom.Rectangle(0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight),
-      Phaser.Geom.Rectangle.Contains,
-    );
+    this.difficultyBar = new Phaser.GameObjects.Container(scene, 10, 128 + 30);
+    this.add(this.difficultyBar);
+    {
+      let probabilities = [2, 3, 2];
+      let x = 0;
+      for (var level = 0; level < probabilities.length; ++level) {
+        for (var i = 0; i < probabilities[level]; ++i) {
+          let rect = new Phaser.GameObjects.Rectangle(this.scene, x, 0, 5, 10, CONST.difficulyLevelColor[level]);
+          rect.setOrigin(0, 0);
+          rect.alpha = 0.5;
+          this.difficultyBar.add(rect);
+          x += 5 + 2;
+        }
+        x += 2;
+      }
+    }
 
-    return encounterContainer;
+    this.setInteractive(new Phaser.Geom.Rectangle(0, 0, W, H), Phaser.Geom.Rectangle.Contains);
   }
 
-  chooseEncounter(encounter: Encounter) {
-    for (let encounterObject of this.encounters) {
+  onEncounterResults(diceResult: number, onEncounterChosen: any): void {
+    let timeline = this.scene.tweens.timeline();
+
+    console.log("HELLO!");
+
+    for (var child of this.difficultyBar.getAll()) {
+      if (diceResult == 0) {
+        break;
+      }
+      let rect = child as Phaser.GameObjects.Rectangle;
+      // rect.alpha = 1.0;
+
+      timeline.add({
+        targets: rect,
+        alpha: 1.0,
+        duration: 500,
+      });
+
+      --diceResult;
+    }
+
+    timeline.play();
+  }
+}
+
+export class EncounterWindow extends Phaser.GameObjects.Container {
+  onComplete: any;
+  encounterCards: Array<EncounterCard>;
+
+  constructor(scene: Phaser.Scene, params: object, encounters: any, onComplete: any) {
+    super(scene, 0, 0);
+    this.onComplete = onComplete;
+    this.encounterCards = new Array<EncounterCard>();
+
+    for (let i = 0; i < encounters.length; ++i) {
+      let encounterCard = new EncounterCard(scene, encounters[i]);
+      encounterCard.setX(50 + i * (GRAPHICS_CONST.encounderCardWidth + 10));
+      encounterCard.setY(50);
+      this.add(encounterCard);
+      this.encounterCards.push(encounterCard);
+      let callback = (pointer: any) => this.showSummary(encounters[i]);
+      encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(5, callback));
+    }
+  }
+
+  showSummary(encounter: Encounter) {
+    for (let encounterObject of this.encounterCards) {
       encounterObject.destroy();
     }
 
@@ -71,6 +133,6 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
     let encounterSummary = this.scene.add.text(250, 50, summaryText, { color: 'white', fontSize: '24pt' });
     this.add(encounterSummary);
     encounterSummary.setInteractive();
-    encounterSummary.on('pointerdown', (pointer: any) => this.onEncounterChosen(encounter));
+    encounterSummary.on('pointerdown', (pointer: any) => this.onComplete(encounter));
   }
 }

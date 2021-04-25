@@ -41,6 +41,7 @@ export class Encounter {
 }
 
 export class EncounterCard extends Phaser.GameObjects.Container {
+  encounterBg: Phaser.GameObjects.Rectangle;
   private encounter: Encounter;
   private difficultyBar: Phaser.GameObjects.Container;
 
@@ -51,27 +52,9 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     let W = GRAPHICS_CONST.encounderCardWidth;
     let H = GRAPHICS_CONST.encounderCardHeight;
 
-    let encounterBg = new Phaser.GameObjects.Rectangle(this.scene, W / 2, H / 2, W, H, 0x6666FF);
+    this.encounterBg = new Phaser.GameObjects.Rectangle(this.scene, W / 2, H / 2, W, H, 0x6666FF);
     // encounterBg.setInteractive();
-    encounterBg.on('pointerover', () => {
-      scene.tweens.add({
-        targets: encounterBg,
-        displayWidth: W + 10,
-        displayHeight: H + 10,
-        duration: 50,
-        ease: 'Sin',
-      });
-    }, this)
-    encounterBg.on('pointerout', () => {
-      scene.tweens.add({
-        targets: encounterBg,
-        displayWidth: W + 0,
-        displayHeight: H + 0,
-        duration: 50,
-        ease: 'Sin',
-      });
-    })
-    this.add(encounterBg);
+    this.add(this.encounterBg);
 
     let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
     encounterSprite.setOrigin(0, 0);
@@ -102,7 +85,9 @@ export class EncounterCard extends Phaser.GameObjects.Container {
   }
 
   onEncounterResults(diceResult: number, onEncounterChosen: any): void {
-    let timeline = this.scene.tweens.timeline();
+    let timeline = this.scene.tweens.timeline({
+      onComplete: onEncounterChosen,
+    });
 
     console.log("HELLO!");
 
@@ -143,6 +128,27 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
       this.encounterCards.push(encounterCard);
       let callback = (pointer: any) => this.showSummary(encounters[i]);
       encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(5, callback));
+
+      let W = GRAPHICS_CONST.encounderCardWidth;
+      let H = GRAPHICS_CONST.encounderCardHeight;
+      encounterCard.on('pointerover', () => {
+        scene.tweens.add({
+          targets: encounterCard.encounterBg,
+          displayWidth: W + 10,
+          displayHeight: H + 10,
+          duration: 50,
+          ease: 'Sin',
+        });
+      }, this)
+      encounterCard.on('pointerout', () => {
+        scene.tweens.add({
+          targets: encounterCard.encounterBg,
+          displayWidth: W + 0,
+          displayHeight: H + 0,
+          duration: 50,
+          ease: 'Sin',
+        });
+      })
     }
   }
 

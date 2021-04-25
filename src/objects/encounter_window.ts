@@ -20,12 +20,20 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
     this.encounters = new Array<Phaser.GameObjects.GameObject>();
 
     for (let i = 0; i < encounters.length; ++i) {
-      var encounterText = scene.add.text(30, 70 + i * 20, encounters[i].title, {color: 'white', fontSize: '12pt'});
-      this.add(encounterText);
-      this.encounters.push(encounterText);
-      encounterText.setInteractive();
-      encounterText.on('pointerdown', (pointer: any) => this.chooseEncounter(encounters[i]));
+      var encounterContainter = this.makeEncounterContainer(encounters[i]);
+      encounterContainter.setX(10);
+      encounterContainter.setY(40 + i * 30);
+      this.add(encounterContainter);
+      this.encounters.push(encounterContainter);
+      encounterContainter.setInteractive();
+      encounterContainter.on('pointerdown', (pointer: any) => this.chooseEncounter(encounters[i]));
     }
+  }
+
+  makeEncounterContainer(encounter: Encounter): Phaser.GameObjects.Text {
+    var encounterText = new Phaser.GameObjects.Text(
+      this.scene, 0, 0, encounter.title, {color: 'white', fontSize: '12pt'});
+    return encounterText;
   }
 
   chooseEncounter(encounter: Encounter) {

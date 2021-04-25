@@ -1,14 +1,30 @@
 import { CONST, GRAPHICS_CONST } from '../const';
 
+export enum Difficulty {
+  EASY,
+  MEDIUM,
+  HARD,
+}
+
+export enum EncounterType {
+  FIGHT,
+  SEARCH,
+  UPGRADE,
+}
+
 export class Encounter {
   title: string
-  damage?: number
-  repair?: number
+  difficulty: Difficulty
+  type: EncounterType
+  damage: number
+  repair: number
 
-  constructor(title: string, params: { damage?: number, repair?: number }) {
+  constructor(title: string, difficulty: Difficulty, type: EncounterType) {
     this.title = title;
-    this.damage = params.damage;
-    this.repair = params.repair;
+    this.difficulty = difficulty;
+    this.type = type;
+    this.damage = 0;
+    this.repair = 0;
   }
 }
 

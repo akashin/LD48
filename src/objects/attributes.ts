@@ -22,7 +22,7 @@ export class AttributesUI extends Phaser.GameObjects.Container {
 //     this.attributeTexts[0].setInteractive();
 //     this.attributeTexts[0].on('pointerdown', function() {
 //       if (submarine.freeAttributesToSpend > 0) {
-//         submarine.enginePower += 1;
+//         submarine.exploration += 1;
 //         submarine.freeAttributesToSpend -= 1;
 //       }
 //     }, this);
@@ -30,7 +30,7 @@ export class AttributesUI extends Phaser.GameObjects.Container {
 //     this.attributeTexts[1].setInteractive();
 //     this.attributeTexts[1].on('pointerdown', function() {
 //       if (submarine.freeAttributesToSpend > 0) {
-//         submarine.firePower += 1;
+//         submarine.fightring += 1;
 //         submarine.freeAttributesToSpend -= 1;
 //       }
 //     }, this);
@@ -38,7 +38,7 @@ export class AttributesUI extends Phaser.GameObjects.Container {
 //     this.attributeTexts[2].setInteractive();
 //     this.attributeTexts[2].on('pointerdown', function() {
 //       if (submarine.freeAttributesToSpend > 0) {
-//         submarine.navigation += 1;
+//         submarine.crafting += 1;
 //         submarine.freeAttributesToSpend -= 1;
 //       }
 //     }, this);
@@ -52,9 +52,9 @@ export class AttributesUI extends Phaser.GameObjects.Container {
   update(): void {
     // this.titleText.setText('Skills:' + this.submarine.freeAttributesToSpend);
     this.titleText.setText('Skills:');
-    this.updateAttributeText(this.attributeTexts[0], 'Fighting', this.submarine.firePower, this.submarine.freeAttributesToSpend);
-    this.updateAttributeText(this.attributeTexts[1], 'Exploration', this.submarine.navigation, this.submarine.freeAttributesToSpend);
-    this.updateAttributeText(this.attributeTexts[2], 'Crafting', this.submarine.enginePower, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[0], 'Fighting', this.submarine.fightring, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[1], 'Exploration', this.submarine.exploration, this.submarine.freeAttributesToSpend);
+    this.updateAttributeText(this.attributeTexts[2], 'Crafting', this.submarine.crafting, this.submarine.freeAttributesToSpend);
   }
 
   private updateAttributeText(attributeText: Phaser.GameObjects.Text, attributeName: string, level: number, freeAttributes: number): void {

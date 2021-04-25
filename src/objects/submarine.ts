@@ -41,9 +41,9 @@ export class Submarine extends Phaser.GameObjects.Container {
   encounterTypeToAttribute: Map<EncounterType, number>;
 
   // Attributes
-  enginePower: number = 0;
-  firePower: number = 0;
-  navigation: number = 0;
+  exploration: number = 0;
+  fightring: number = 0;
+  crafting: number = 0;
   freeAttributesToSpend: number = 10;
 
   constructor(scene: Phaser.Scene, params: object) {
@@ -85,15 +85,15 @@ export class Submarine extends Phaser.GameObjects.Container {
   addAttribute(encounterType: EncounterType, delta: number) {
     switch (encounterType) {
       case EncounterType.FIGHT: {
-        this.firePower += delta;
+        this.fightring += delta;
         break;
       }
       case EncounterType.SEARCH: {
-        this.enginePower += delta;
+        this.exploration += delta;
         break;
       }
       case EncounterType.UPGRADE: {
-        this.navigation += delta;
+        this.crafting += delta;
         break;
       }
     }
@@ -102,13 +102,13 @@ export class Submarine extends Phaser.GameObjects.Container {
   getAttribute(encounterType: EncounterType): number {
     switch (encounterType) {
       case EncounterType.FIGHT: {
-        return this.firePower;
+        return this.fightring;
       }
       case EncounterType.SEARCH: {
-        return this.enginePower;
+        return this.exploration;
       }
       case EncounterType.UPGRADE: {
-        return this.navigation;
+        return this.crafting;
       }
     }
   }

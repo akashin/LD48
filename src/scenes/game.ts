@@ -35,7 +35,7 @@ export default class GameScene extends Phaser.Scene {
     var gameHeight = this.game.config.height as number;
 
     this.submarine = new Submarine(this, {});
-    this.submarine.setPosition(200, 150);
+    this.submarine.setPosition(50, 450);
     this.add.existing(this.submarine);
 
     this.currentDepthText = this.add.text(gameWidth * 0.7, 10, "", { color: 'white', fontSize: '24pt' });
@@ -47,15 +47,15 @@ export default class GameScene extends Phaser.Scene {
 
     let skill0 = new Skill(this);
     let skill1 = new Skill(this);
-    skill0.setPosition(300, 300);
-    skill1.setPosition(460, 300);
+    skill0.setPosition(450, 400);
+    skill1.setPosition(610, 400);
     this.add.existing(skill0);
     this.add.existing(skill1);
 
     this.tweens.add({
       targets: skill0,
       // delay: randomInt(1000),
-      y: 310,
+      y: 410,
       yoyo: true,
       repeat: -1,
       ease: 'Sin.easeOut',

@@ -164,12 +164,12 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     timeline.add({
       targets: this.rollText,
       alpha: 1.0,
-      duration: 2000,
+      duration: 1000,
     });
     timeline.add({
       targets: this.rollText,
       alpha: 1.0,
-      duration: 1000,
+      duration: 500,
     });
 
     timeline.play();

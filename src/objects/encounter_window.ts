@@ -40,6 +40,20 @@ export class Encounter {
   }
 }
 
+function encounterToAssertName(encounter: Encounter) {
+  switch (encounter.type) {
+    case EncounterType.FIGHT: {
+      return "fight";
+    }
+    case EncounterType.SEARCH: {
+      return "explore";
+    }
+    case EncounterType.UPGRADE: {
+      return "hammer";
+    }
+  }
+}
+
 export class EncounterCard extends Phaser.GameObjects.Container {
   encounterBg: Phaser.GameObjects.Rectangle;
   private encounter: Encounter;
@@ -63,7 +77,7 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     this.encounterBg = new Phaser.GameObjects.Rectangle(this.scene, W / 2, H / 2, W, H, 0x6666FF);
     this.add(this.encounterBg);
 
-    let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
+    let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, encounterToAssertName(encounter));
     encounterSprite.setOrigin(0, 0);
     encounterSprite.setDisplaySize(128, 128);
     this.add(encounterSprite);

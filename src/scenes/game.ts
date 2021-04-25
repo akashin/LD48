@@ -60,6 +60,7 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     this.load.image('hammer', 'assets/hammer.png');
+    this.load.image('explore', 'assets/explore.png');
     this.load.image('submarine', 'assets/submarine.png');
   }
 

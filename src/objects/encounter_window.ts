@@ -12,20 +12,27 @@ export class Encounter {
 
 export class EncounterWindow extends Phaser.GameObjects.Container {
   onEncounterChosen: any;
+  encounters: Array<Phaser.GameObjects.GameObject>;
 
   constructor(scene: Phaser.Scene, params: object, encounters: any, onEncounterChosen: any) {
     super(scene, 0, 0);
     this.onEncounterChosen = onEncounterChosen;
+    this.encounters = new Array<Phaser.GameObjects.GameObject>();
 
     for (let i = 0; i < encounters.length; ++i) {
       var encounterText = scene.add.text(30, 70 + i * 20, encounters[i].title, {color: 'white', fontSize: '12pt'});
       this.add(encounterText);
+      this.encounters.push(encounterText);
       encounterText.setInteractive();
       encounterText.on('pointerdown', (pointer: any) => this.chooseEncounter(encounters[i]));
     }
   }
 
   chooseEncounter(encounter: Encounter) {
+    for (let encounterObject of this.encounters) {
+      encounterObject.destroy();
+    }
+
     var summaryText = "Summary: ";
     if (encounter.damage !== undefined) {
       summaryText += "damage: " + encounter.damage + "\n";

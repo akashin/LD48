@@ -5,6 +5,7 @@ import { Submarine } from '../objects/submarine';
 import { Encounter, EncounterWindow } from '../objects/encounter_window';
 import { generateEncounter } from '../logic/encounter_generation';
 import { randomInt } from '../utils/math'
+import { AttributesUI } from '../objects/attributes';
 
 export default class GameScene extends Phaser.Scene {
   private actions: Array<Phaser.GameObjects.Text>;
@@ -18,6 +19,8 @@ export default class GameScene extends Phaser.Scene {
 
   private currentDepth: number = 0;
   private currentDepthText!: Phaser.GameObjects.Text;
+
+  private attributes!: AttributesUI;
 
   private qKey!: Phaser.Input.Keyboard.Key;
 
@@ -53,15 +56,19 @@ export default class GameScene extends Phaser.Scene {
     this.add.existing(skill0);
     this.add.existing(skill1);
 
-    this.tweens.add({
-      targets: skill0,
-      // delay: randomInt(1000),
-      y: 410,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sin.easeOut',
-      duration: 1000,
-    });
+    // this.tweens.add({
+    //   targets: skill0,
+    //   // delay: randomInt(1000),
+    //   y: 410,
+    //   yoyo: true,
+    //   repeat: -1,
+    //   ease: 'Sin.easeOut',
+    //   duration: 1000,
+    // });
+
+    this.attributes = new AttributesUI(this, this.submarine);
+    this.attributes.setPosition(170, 400);
+    this.add.existing(this.attributes);
   }
 
   setDepth(depth: number) {
@@ -80,6 +87,7 @@ export default class GameScene extends Phaser.Scene {
     for (let i = 0; i < 3; ++i) {
       this.nextEncounters.push(generateEncounter());
     }
+
     this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, (i: number) => this.resolveEncounter(i));
     this.add.existing(this.encounterWindow);
   }
@@ -119,6 +127,8 @@ export default class GameScene extends Phaser.Scene {
       this.timeSinceLastTick -= CONST.tickDuration;
       this.tick();
     }
+
+    this.attributes.update();
   }
 
   tick(): void {

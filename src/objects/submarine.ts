@@ -12,6 +12,12 @@ export class Submarine extends Phaser.GameObjects.Container {
 
   submarineSprite: Phaser.GameObjects.Sprite;
 
+  // Attributes
+  enginePower: number = 0;
+  firePower: number = 0;
+  navigation: number = 0;
+  freeAttributesToSpend: number = 10;
+
   constructor(scene: Phaser.Scene, params: object) {
     super(scene, 0, 0);
 

@@ -67,6 +67,8 @@ export class EncounterCard extends Phaser.GameObjects.Container {
   private resourcesText: Phaser.GameObjects.Text;
   private attributesText: Phaser.GameObjects.Text;
 
+  private gotOutcome: boolean = false;
+
   constructor(scene: Phaser.Scene, encounter: Encounter) {
     super(scene);
     this.encounter = encounter;
@@ -147,7 +149,13 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     }
   }
 
-  onEncounterResults(outcome: EncounterOutcome, onEncounterChosen: any): void {
+  onEncounterResults(generateOutcome: any, encounter: Encounter, onEncounterChosen: any): void {
+    if (this.gotOutcome) {
+      return;
+    }
+    let outcome: EncounterOutcome = generateOutcome(encounter);
+    this.gotOutcome = true;
+
     this.updateOutcome(outcome);
 
     let timeline = this.scene.tweens.timeline({
@@ -186,7 +194,7 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
       this.add(encounterCard);
       this.encounterCards.push(encounterCard);
       let callback = (pointer: any) => this.showSummary(encounters[i]);
-      encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(generateOutcome(encounters[i]), callback));
+      encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(generateOutcome, encounters[i], callback));
 
       let W = GRAPHICS_CONST.encounderCardWidth;
       let H = GRAPHICS_CONST.encounderCardHeight;

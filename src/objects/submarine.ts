@@ -77,4 +77,36 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.resourceToText.get(resourceType).setText(
       resourceTypeToString(resourceType) + ": " + amount);
   }
+
+  addResourceAmount(resourceType: ResourceType, delta: number) {
+    this.setResourceAmount(resourceType, this.resourceToAmount.get(resourceType) + delta);
+  }
+
+  addAttribute(encounterType: EncounterType, delta: number) {
+    switch (encounterType) {
+      case EncounterType.FIGHT: {
+        this.firePower += delta;
+      }
+      case EncounterType.SEARCH: {
+        this.enginePower += delta;
+      }
+      case EncounterType.UPGRADE: {
+        this.navigation += delta;
+      }
+    }
+  }
+
+  getAttribute(encounterType: EncounterType): number {
+    switch (encounterType) {
+      case EncounterType.FIGHT: {
+        return this.firePower;
+      }
+      case EncounterType.SEARCH: {
+        return this.enginePower;
+      }
+      case EncounterType.UPGRADE: {
+        return this.navigation;
+      }
+    }
+  }
 }

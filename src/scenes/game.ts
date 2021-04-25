@@ -42,6 +42,7 @@ export default class GameScene extends Phaser.Scene {
 
   private encounterWindow?: EncounterWindow = undefined;
   private nextEncounters?: Array<Encounter> = undefined;
+  private encounterOutcome?: EncounterOutcome = undefined;
 
   private timeSinceLastTick: number = 0;
 
@@ -77,12 +78,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.addAction('Dive Deeper', (pointer: any) => this.chooseEncounter());
 
-    let skill0 = new Skill(this);
-    let skill1 = new Skill(this);
-    skill0.setPosition(450, 400);
-    skill1.setPosition(610, 400);
-    this.add.existing(skill0);
-    this.add.existing(skill1);
+    // let skill0 = new Skill(this);
+    // let skill1 = new Skill(this);
+    // skill0.setPosition(450, 400);
+    // skill1.setPosition(610, 400);
+    // this.add.existing(skill0);
+    // this.add.existing(skill1);
 
     // this.tweens.add({
     //   targets: skill0,
@@ -95,7 +96,7 @@ export default class GameScene extends Phaser.Scene {
     // });
 
     this.attributes = new AttributesUI(this, this.submarine);
-    this.attributes.setPosition(170, 400);
+    this.attributes.setPosition(450, 400);
     this.add.existing(this.attributes);
   }
 
@@ -117,6 +118,7 @@ export default class GameScene extends Phaser.Scene {
     outcome.resourceTypeToAmount[encounterGeneratedResource(encounter.type)] = resourcesByDifficulty(encounter.difficulty);
     outcome.resourceTypeToAmount[encounterConsumedResource(encounter.type)] = -resourcesByDifficulty(encounter.difficulty);
     // TODO: Fill in attributes.
+    this.encounterOutcome = outcome;
     return outcome;
   }
 
@@ -135,10 +137,22 @@ export default class GameScene extends Phaser.Scene {
   }
 
   resolveEncounter(encounter: Encounter) {
-    if (this.encounterWindow != undefined && this.nextEncounters != undefined) {
+    if (this.encounterOutcome === undefined) {
+      this.encounterOutcome = this.generateEncounterOutcome(encounter);
+    }
+    if (this.encounterWindow != undefined && this.nextEncounters != undefined && this.encounterOutcome != undefined) {
       console.log("Resolving encounter ", encounter)
+      for (let resourceType of [ResourceType.HULL, ResourceType.BIOFUEL, ResourceType.MATERIALS]) {
+        this.submarine.addResourceAmount(resourceType, this.encounterOutcome.resourceTypeToAmount[resourceType]);
+      }
+      for (let encounterType of [EncounterType.FIGHT, EncounterType.SEARCH, EncounterType.UPGRADE]) {
+        this.submarine.addAttribute(encounterType, this.encounterOutcome.boostedAttributed[encounterType]);
+      }
+      this.attributes.update();
+
       this.encounterWindow.destroy();
       this.nextEncounters = undefined;
+      this.encounterOutcome = undefined;
       this.setDepth(this.currentDepth + 1);
     }
   }

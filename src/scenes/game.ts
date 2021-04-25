@@ -2,10 +2,38 @@ import Phaser from 'phaser';
 import { CONST } from '../const';
 import { Skill } from '../objects/skill';
 import { Submarine, ResourceType } from '../objects/submarine';
-import { Encounter, EncounterWindow } from '../objects/encounter_window';
-import { generateEncounters } from '../logic/encounter_generation';
+import { Encounter, EncounterWindow, EncounterOutcome, EncounterType } from '../objects/encounter_window';
+import { generateEncounters, resourcesByDifficulty, thresholdByDifficulty } from '../logic/encounter_generation';
 import { randomInt } from '../utils/math'
 import { AttributesUI } from '../objects/attributes';
+
+function encounterConsumedResource(encounterType: EncounterType): ResourceType {
+  switch (encounterType) {
+    case EncounterType.FIGHT: {
+      return ResourceType.HULL;
+    }
+    case EncounterType.SEARCH: {
+      return ResourceType.BIOFUEL;
+    }
+    case EncounterType.UPGRADE: {
+      return ResourceType.MATERIALS;
+    }
+  }
+}
+
+function encounterGeneratedResource(encounterType: EncounterType): ResourceType {
+  switch (encounterType) {
+    case EncounterType.FIGHT: {
+      return ResourceType.BIOFUEL;
+    }
+    case EncounterType.SEARCH: {
+      return ResourceType.MATERIALS;
+    }
+    case EncounterType.UPGRADE: {
+      return ResourceType.HULL;
+    }
+  }
+}
 
 export default class GameScene extends Phaser.Scene {
   private actions: Array<Phaser.GameObjects.Text>;
@@ -76,6 +104,22 @@ export default class GameScene extends Phaser.Scene {
     this.currentDepthText.setText("Depth: " + String(depth));
   }
 
+  generateEncounterOutcome(encounter: Encounter): EncounterOutcome {
+    let outcome = new EncounterOutcome();
+    outcome.roll = 1 + randomInt(20);
+    outcome.checkDifficulty = thresholdByDifficulty(encounter.difficulty);
+    outcome.success = outcome.roll >= outcome.checkDifficulty;
+    if (outcome.success) {
+      outcome.text = "Success!";
+    } else {
+      outcome.text = "Failure!";
+    }
+    outcome.resourceTypeToAmount[encounterGeneratedResource(encounter.type)] = resourcesByDifficulty(encounter.difficulty);
+    outcome.resourceTypeToAmount[encounterConsumedResource(encounter.type)] = -resourcesByDifficulty(encounter.difficulty);
+    // TODO: Fill in attributes.
+    return outcome;
+  }
+
   chooseEncounter() {
     console.log("Dive!")
     if (this.nextEncounters != undefined) {
@@ -84,7 +128,8 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.nextEncounters = generateEncounters();
-    this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, (i: number) => this.resolveEncounter(i));
+    this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, 
+                                               (encounter: Encounter) => this.resolveEncounter(encounter));
     this.add.existing(this.encounterWindow);
   }
 

@@ -12,6 +12,18 @@ export enum EncounterType {
   UPGRADE,
 }
 
+export class EncounterOutcome {
+  text?: string;
+  roll?: number;
+  checkDifficulty?: number;
+  success?: boolean;
+  resourceTypeToAmount: Array<number> = [0, 0, 0];
+  boostedAttributed: Array<number> = [0, 0, 0];
+
+  constructor() {
+  }
+}
+
 export class Encounter {
   title: string
   difficulty: Difficulty

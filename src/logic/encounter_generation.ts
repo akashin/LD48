@@ -1,7 +1,7 @@
 import { Encounter, Difficulty, EncounterType } from '../objects/encounter_window';
 import { randomInt } from '../utils/math'
 
-function resourcesByDifficulty(difficulty: Difficulty): number {
+export function resourcesByDifficulty(difficulty: Difficulty): number {
   switch (difficulty) {
     case Difficulty.EASY: return 1;
     case Difficulty.MEDIUM: return 3;
@@ -9,7 +9,7 @@ function resourcesByDifficulty(difficulty: Difficulty): number {
   }
 }
 
-function thresholdByDifficulty(difficulty: Difficulty): number {
+export function thresholdByDifficulty(difficulty: Difficulty): number {
   switch (difficulty) {
     // Should give 80% success.
     // 5..20 out of 20

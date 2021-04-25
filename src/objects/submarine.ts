@@ -1,12 +1,13 @@
 import { CONST } from '../const';
+import { EncounterType } from '../objects/encounter_window';
 
 export enum ResourceType {
   // Ship hull integrity.
-  HULL,
+  HULL = 0,
   // Bio fuel.
-  BIOFUEL,
+  BIOFUEL = 1,
   // Materials for repairs and upgrades.
-  MATERIALS,
+  MATERIALS = 2,
 }
 
 function resourceTypeToString(resourceType: ResourceType): string {
@@ -17,11 +18,27 @@ function resourceTypeToString(resourceType: ResourceType): string {
   }
 }
 
+function encounterTypeToAttributeName(encounterType: EncounterType): string {
+  switch (encounterType) {
+    case EncounterType.FIGHT: {
+      return "Fighting";
+    }
+    case EncounterType.SEARCH: {
+      return "Exploration";
+    }
+    case EncounterType.UPGRADE: {
+      return "Crafting";
+    }
+  }
+}
+
 export class Submarine extends Phaser.GameObjects.Container {
   resourceToAmount: Map<ResourceType, number>;
   resourceToText: Map<ResourceType, Phaser.GameObjects.Text>;
 
   submarineSprite: Phaser.GameObjects.Sprite;
+
+  encounterTypeToAttribute: Map<EncounterType, number>;
 
   // Attributes
   enginePower: number = 0;

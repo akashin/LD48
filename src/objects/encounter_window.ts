@@ -115,8 +115,9 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
   onComplete: any;
   encounterCards: Array<EncounterCard>;
 
-  constructor(scene: Phaser.Scene, params: object, encounters: any, onComplete: any) {
+  constructor(scene: Phaser.Scene, params: object, encounters: any, generateOutcome: any, onComplete: any) {
     super(scene, 0, 0);
+    this.generateOutcome = generateOutcome;
     this.onComplete = onComplete;
     this.encounterCards = new Array<EncounterCard>();
 

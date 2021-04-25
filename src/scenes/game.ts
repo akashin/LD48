@@ -129,6 +129,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.nextEncounters = generateEncounters();
     this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, 
+                                               (encounter: Encounter) => this.generateEncounterOutcome(encounter),
                                                (encounter: Encounter) => this.resolveEncounter(encounter));
     this.add.existing(this.encounterWindow);
   }

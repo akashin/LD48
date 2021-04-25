@@ -7,9 +7,9 @@ export enum Difficulty {
 }
 
 export enum EncounterType {
-  FIGHT,
-  SEARCH,
-  UPGRADE,
+  FIGHT = 0,
+  SEARCH = 1,
+  UPGRADE = 2,
 }
 
 export class EncounterOutcome {

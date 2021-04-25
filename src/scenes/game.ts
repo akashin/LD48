@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { CONST } from '../const';
 import { Skill } from '../objects/skill';
 import { Submarine, ResourceType } from '../objects/submarine';
-import { Encounter, EncounterWindow, EncounterOutcome, EncounterType } from '../objects/encounter_window';
+import { Encounter, EncounterWindow, EncounterOutcome, EncounterType, Difficulty } from '../objects/encounter_window';
 import { generateEncounters, resourcesByDifficulty, thresholdByDifficulty } from '../logic/encounter_generation';
 import { randomInt } from '../utils/math'
 import { AttributesUI } from '../objects/attributes';
@@ -107,17 +107,20 @@ export default class GameScene extends Phaser.Scene {
 
   generateEncounterOutcome(encounter: Encounter): EncounterOutcome {
     let outcome = new EncounterOutcome();
-    outcome.roll = 1 + randomInt(20);
-    outcome.checkDifficulty = thresholdByDifficulty(encounter.difficulty);
+    outcome.roll = 1 + randomInt(20) + this.submarine.getAttribute(encounter.type);
+    outcome.checkDifficulty = thresholdByDifficulty(encounter.difficulty) + Math.floor(this.currentDepth / 5);
     outcome.success = outcome.roll >= outcome.checkDifficulty;
     if (outcome.success) {
       outcome.text = "Success!";
+      if (encounter.difficulty == Difficulty.HARD) {
+        outcome.boostedAttributed[encounter.type] = 1;
+      }
     } else {
       outcome.text = "Failure!";
     }
     outcome.resourceTypeToAmount[encounterGeneratedResource(encounter.type)] = resourcesByDifficulty(encounter.difficulty);
     outcome.resourceTypeToAmount[encounterConsumedResource(encounter.type)] = -resourcesByDifficulty(encounter.difficulty);
-    // TODO: Fill in attributes.
+    console.log('Boosted attributes:', outcome.boostedAttributed);
     this.encounterOutcome = outcome;
     return outcome;
   }

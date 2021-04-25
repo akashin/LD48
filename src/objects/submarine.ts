@@ -86,12 +86,15 @@ export class Submarine extends Phaser.GameObjects.Container {
     switch (encounterType) {
       case EncounterType.FIGHT: {
         this.firePower += delta;
+        break;
       }
       case EncounterType.SEARCH: {
         this.enginePower += delta;
+        break;
       }
       case EncounterType.UPGRADE: {
         this.navigation += delta;
+        break;
       }
     }
   }

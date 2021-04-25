@@ -1,3 +1,5 @@
+import { GRAPHICS_CONST } from '../const';
+
 export class Encounter {
   title: string
   damage?: number
@@ -12,28 +14,47 @@ export class Encounter {
 
 export class EncounterWindow extends Phaser.GameObjects.Container {
   onEncounterChosen: any;
-  encounters: Array<Phaser.GameObjects.GameObject>;
+  encounters: Array<Phaser.GameObjects.Container>;
 
   constructor(scene: Phaser.Scene, params: object, encounters: any, onEncounterChosen: any) {
     super(scene, 0, 0);
     this.onEncounterChosen = onEncounterChosen;
-    this.encounters = new Array<Phaser.GameObjects.GameObject>();
+    this.encounters = new Array<Phaser.GameObjects.Container>();
 
     for (let i = 0; i < encounters.length; ++i) {
       var encounterContainter = this.makeEncounterContainer(encounters[i]);
-      encounterContainter.setX(10);
-      encounterContainter.setY(40 + i * 30);
+      encounterContainter.setX(50 + i * (encounterContainter.width + 10));
+      encounterContainter.setY(50);
       this.add(encounterContainter);
       this.encounters.push(encounterContainter);
-      encounterContainter.setInteractive();
       encounterContainter.on('pointerdown', (pointer: any) => this.chooseEncounter(encounters[i]));
     }
   }
 
-  makeEncounterContainer(encounter: Encounter): Phaser.GameObjects.Text {
-    var encounterText = new Phaser.GameObjects.Text(
+  makeEncounterContainer(encounter: Encounter): Phaser.GameObjects.Container {
+    let encounterContainer = new Phaser.GameObjects.Container(this.scene, 0, 0);
+
+    let encounterBg = new Phaser.GameObjects.Rectangle(
+      this.scene, 0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight, 0x6666FF);
+    // encounterBg.setOrigin(0, 0);
+    encounterContainer.add(encounterBg);
+
+    let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
+    encounterSprite.setOrigin(0, 0);
+    encounterSprite.setDisplaySize(128, 128);
+    encounterContainer.add(encounterSprite);
+
+    let encounterText = new Phaser.GameObjects.Text(
       this.scene, 0, 0, encounter.title, {color: 'white', fontSize: '12pt'});
-    return encounterText;
+    encounterContainer.add(encounterText);
+
+    encounterContainer.setSize(GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight);
+    encounterContainer.setInteractive(
+      new Phaser.Geom.Rectangle(0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight),
+      Phaser.Geom.Rectangle.Contains,
+    );
+
+    return encounterContainer;
   }
 
   chooseEncounter(encounter: Encounter) {

@@ -17,3 +17,8 @@ export let CONST = {
   repairCost: 1,
   repairAmount: 2,
 }
+
+export let GRAPHICS_CONST = {
+  encounderCardWidth: 150,
+  encounderCardHeight: 300,
+}

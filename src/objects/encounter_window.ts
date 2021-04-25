@@ -50,6 +50,9 @@ export class EncounterCard extends Phaser.GameObjects.Container {
   private difBox: Phaser.GameObjects.Rectangle;
   private difText: Phaser.GameObjects.Text;
 
+  private resourcesText: Phaser.GameObjects.Text;
+  private attributesText: Phaser.GameObjects.Text;
+
   constructor(scene: Phaser.Scene, encounter: Encounter) {
     super(scene);
     this.encounter = encounter;
@@ -93,21 +96,45 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     }
     this.add(this.outcomeBar);
 
+    this.resourcesText = new Phaser.GameObjects.Text(this.scene, 10, 200, '', {color: 'white', fontSize: '12pt'});
+    this.add(this.resourcesText);
+
+    this.attributesText = new Phaser.GameObjects.Text(this.scene, 10, 220, '', {color: 'white', fontSize: '12pt'});
+    this.add(this.attributesText);
+
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, W, H), Phaser.Geom.Rectangle.Contains);
   }
 
-  private updateOutcome(roll?: number, dif?: number): void {
-    this.rollText.setText(String(roll));
+  private updateOutcome(outcome: EncounterOutcome): void {
+    this.rollText.setText(String(outcome.roll));
     let rollTextBounds = this.rollText.getBounds();
     this.rollText.setPosition(this.rollBox.x + (30 - rollTextBounds.width) / 2, this.rollBox.y + (30 - rollTextBounds.height) / 2);
 
-    this.difText.setText(String(dif));
+    this.difText.setText(String(outcome.checkDifficulty));
     let difTextBounds = this.difText.getBounds();
     this.difText.setPosition(this.difBox.x + (30 - difTextBounds.width) / 2, this.difBox.y + (30 - difTextBounds.height) / 2);
+
+    {
+      let text = '[';
+      for (var i = 0; i < outcome.resourceTypeToAmount.length; ++i) {
+        text += outcome.resourceTypeToAmount[i] + '] [';
+      }
+      text = text.substr(0, text.length - 2);
+      this.resourcesText.setText(text);
+    }
+
+    {
+      let text = '[';
+      for (var i = 0; i < outcome.boostedAttributed.length; ++i) {
+        text += outcome.boostedAttributed[i] + '] [';
+      }
+      text = text.substr(0, text.length - 2);
+      this.attributesText.setText(text);
+    }
   }
 
   onEncounterResults(outcome: EncounterOutcome, onEncounterChosen: any): void {
-    this.updateOutcome(outcome.roll, outcome.checkDifficulty);
+    this.updateOutcome(outcome);
 
     let timeline = this.scene.tweens.timeline({
       onComplete: onEncounterChosen,

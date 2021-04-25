@@ -5,7 +5,7 @@ export class Encounter {
   damage?: number
   repair?: number
 
-  constructor(title: string, params: { damage?: number, repair?: repair }) {
+  constructor(title: string, params: { damage?: number, repair?: number }) {
     this.title = title;
     this.damage = params.damage;
     this.repair = params.repair;

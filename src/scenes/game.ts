@@ -3,6 +3,7 @@ import { CONST } from '../const';
 import { Skill } from '../objects/skill';
 import { Submarine } from '../objects/submarine';
 import { Encounter, EncounterWindow } from '../objects/encounter_window';
+import { generateEncounter } from '../logic/encounter_generation';
 import { randomInt } from '../utils/math'
 
 export default class GameScene extends Phaser.Scene {
@@ -76,9 +77,9 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.nextEncounters = new Array<Encounter>();
-    this.nextEncounters.push(new Encounter("Repair", { repair: 1 }));
-    this.nextEncounters.push(new Encounter("Fight", { damage: 1 }));
-    this.nextEncounters.push(new Encounter("Search", {}));
+    for (let i = 0; i < 3; ++i) {
+      this.nextEncounters.push(generateEncounter());
+    }
     this.encounterWindow = new EncounterWindow(this, {}, this.nextEncounters, (i: number) => this.resolveEncounter(i));
     this.add.existing(this.encounterWindow);
   }

@@ -4,8 +4,8 @@ import { randomInt } from '../utils/math'
 export function resourcesByDifficulty(difficulty: Difficulty): number {
   switch (difficulty) {
     case Difficulty.EASY: return 1;
-    case Difficulty.MEDIUM: return 3;
-    case Difficulty.HARD: return 6;
+    case Difficulty.MEDIUM: return 2;
+    case Difficulty.HARD: return 3;
   }
 }
 

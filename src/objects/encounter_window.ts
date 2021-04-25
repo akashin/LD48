@@ -23,7 +23,7 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
 
     for (let i = 0; i < encounters.length; ++i) {
       var encounterContainter = this.makeEncounterContainer(encounters[i]);
-      encounterContainter.setX(50 + i * (encounterContainter.width + 10));
+      encounterContainter.setX(50 + i * (GRAPHICS_CONST.encounderCardWidth + 10));
       encounterContainter.setY(50);
       this.add(encounterContainter);
       this.encounters.push(encounterContainter);
@@ -36,7 +36,7 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
 
     let encounterBg = new Phaser.GameObjects.Rectangle(
       this.scene, 0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight, 0x6666FF);
-    // encounterBg.setOrigin(0, 0);
+    encounterBg.setOrigin(0, 0);
     encounterContainer.add(encounterBg);
 
     let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
@@ -45,10 +45,9 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
     encounterContainer.add(encounterSprite);
 
     let encounterText = new Phaser.GameObjects.Text(
-      this.scene, 0, 0, encounter.title, {color: 'white', fontSize: '12pt'});
+      this.scene, 10, 128 + 10, encounter.title, {color: 'white', fontSize: '12pt'});
     encounterContainer.add(encounterText);
 
-    encounterContainer.setSize(GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight);
     encounterContainer.setInteractive(
       new Phaser.Geom.Rectangle(0, 0, GRAPHICS_CONST.encounderCardWidth, GRAPHICS_CONST.encounderCardHeight),
       Phaser.Geom.Rectangle.Contains,

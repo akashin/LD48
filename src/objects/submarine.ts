@@ -1,35 +1,39 @@
 import { CONST } from '../const';
 
 export class Submarine extends Phaser.GameObjects.Container {
-  oxygen: number = CONST.maxOxygen;
-  oxygenText: Phaser.GameObjects.Text;
-
   hullHealth: number = CONST.maxHullHealth;
   hullHealthText: Phaser.GameObjects.Text;
 
-  submarineSprite: Phaser.GameObjects.Sprite;
+  oxygen: number = CONST.maxOxygen;
+  oxygenText: Phaser.GameObjects.Text;
 
-  loot: number = 5;
+  loot: number = 0;
   lootText: Phaser.GameObjects.Text;
+
+  submarineSprite: Phaser.GameObjects.Sprite;
 
   constructor(scene: Phaser.Scene, params: object) {
     super(scene, 0, 0);
 
     this.submarineSprite = new Phaser.GameObjects.Sprite(scene, 0, 0, 'submarine');
     this.submarineSprite.setScale(0.2, 0.2);
+    this.submarineSprite.setOrigin(0, 0);
     this.add(this.submarineSprite);
 
-    this.oxygenText = scene.add.text(30, 70, '', {color: 'white', fontSize: '12pt'});
-    this.add(this.oxygenText);
-    this.setOxygen(CONST.maxOxygen);
-
-    this.hullHealthText = scene.add.text(30, 90, '', {color: 'white', fontSize: '12pt'});
+    this.hullHealthText = new Phaser.GameObjects.Text(
+      scene, this.submarineSprite.displayWidth, 0, '', {color: 'white', fontSize: '12pt'});
     this.add(this.hullHealthText);
     this.setHullHealth(CONST.maxHullHealth);
 
-    this.lootText = scene.add.text(30, 110, '', {color: 'white', fontSize: '12pt'});
-    this.add(this.lootText);
-    this.setLoot(5);
+    this.lootText = new Phaser.GameObjects.Text(
+      scene, this.submarineSprite.displayWidth, 20, '', {color: 'white', fontSize: '12pt'});
+    // this.add(this.lootText);
+    // this.setLoot(5);
+
+    this.oxygenText = new Phaser.GameObjects.Text(
+      scene, this.submarineSprite.displayWidth, 40, '', {color: 'white', fontSize: '12pt'});
+    // this.add(this.oxygenText);
+    // this.setOxygen(CONST.maxOxygen);
   }
 
   setHullHealth(hullHealth: number) {
@@ -37,14 +41,14 @@ export class Submarine extends Phaser.GameObjects.Container {
     this.hullHealthText.setText('Hull health: ' + hullHealth);
   }
 
-  setLoot(loot: number) {
-    this.loot = loot;
-    this.lootText.setText('Loot: ' + loot);
-  }
-
   setOxygen(oxygen: number) {
     this.oxygen = oxygen;
     this.oxygenText.setText('Oxygen: ' + oxygen);
+  }
+
+  setLoot(loot: number) {
+    this.loot = loot;
+    this.lootText.setText('Loot: ' + loot);
   }
 
   takeDamage(amount: number): void {

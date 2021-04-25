@@ -43,7 +43,12 @@ export class Encounter {
 export class EncounterCard extends Phaser.GameObjects.Container {
   encounterBg: Phaser.GameObjects.Rectangle;
   private encounter: Encounter;
-  private difficultyBar: Phaser.GameObjects.Container;
+  private outcomeBar: Phaser.GameObjects.Container;
+
+  private rollBox: Phaser.GameObjects.Rectangle;
+  private rollText: Phaser.GameObjects.Text;
+  private difBox: Phaser.GameObjects.Rectangle;
+  private difText: Phaser.GameObjects.Text;
 
   constructor(scene: Phaser.Scene, encounter: Encounter) {
     super(scene);
@@ -53,7 +58,6 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     let H = GRAPHICS_CONST.encounderCardHeight;
 
     this.encounterBg = new Phaser.GameObjects.Rectangle(this.scene, W / 2, H / 2, W, H, 0x6666FF);
-    // encounterBg.setInteractive();
     this.add(this.encounterBg);
 
     let encounterSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'hammer');
@@ -64,54 +68,67 @@ export class EncounterCard extends Phaser.GameObjects.Container {
     let encounterText = new Phaser.GameObjects.Text(this.scene, 10, 128 + 10, encounter.title, {color: 'white', fontSize: '12pt'});
     this.add(encounterText);
 
-    this.difficultyBar = new Phaser.GameObjects.Container(scene, 10, 128 + 30);
-    this.add(this.difficultyBar);
+    this.outcomeBar = new Phaser.GameObjects.Container(scene, 30, 128 + 30);
     {
-      let probabilities = [2, 3, 2];
-      let x = 0;
-      for (var level = 0; level < probabilities.length; ++level) {
-        for (var i = 0; i < probabilities[level]; ++i) {
-          let rect = new Phaser.GameObjects.Rectangle(this.scene, x, 0, 5, 10, CONST.difficulyLevelColor[level]);
-          rect.setOrigin(0, 0);
-          rect.alpha = 0.5;
-          this.difficultyBar.add(rect);
-          x += 5 + 2;
-        }
-        x += 2;
-      }
+      this.rollBox = new Phaser.GameObjects.Rectangle(this.scene, 0, 0, 30, 30, 0x705114);
+      this.rollBox.setOrigin(0, 0);
+      this.outcomeBar.add(this.rollBox);
+
+      this.rollText = new Phaser.GameObjects.Text(this.scene, 0, 0, '', {color: 'white', fontSize: '12pt'});
+      this.rollText.setOrigin(0, 0);
+      this.rollText.alpha = 0.0;
+      this.outcomeBar.add(this.rollText);
+
+      let vsText = new Phaser.GameObjects.Text(this.scene, 35, 8, 'VS', {color: 'white', fontSize: '12pt'});
+      vsText.setOrigin(0, 0);
+      this.outcomeBar.add(vsText);
+
+      this.difBox = new Phaser.GameObjects.Rectangle(this.scene, 60, 0, 30, 30, 0x705114);
+      this.difBox.setOrigin(0, 0);
+      this.outcomeBar.add(this.difBox);
+
+      this.difText = new Phaser.GameObjects.Text(this.scene, 60, 0, '', {color: 'white', fontSize: '12pt'});
+      this.difText.setOrigin(0, 0);
+      this.outcomeBar.add(this.difText);
     }
+    this.add(this.outcomeBar);
 
     this.setInteractive(new Phaser.Geom.Rectangle(0, 0, W, H), Phaser.Geom.Rectangle.Contains);
   }
 
-  onEncounterResults(diceResult: number, onEncounterChosen: any): void {
+  private updateOutcome(roll?: number, dif?: number): void {
+    this.rollText.setText(String(roll));
+    let rollTextBounds = this.rollText.getBounds();
+    this.rollText.setPosition(this.rollBox.x + (30 - rollTextBounds.width) / 2, this.rollBox.y + (30 - rollTextBounds.height) / 2);
+
+    this.difText.setText(String(dif));
+    let difTextBounds = this.difText.getBounds();
+    this.difText.setPosition(this.difBox.x + (30 - difTextBounds.width) / 2, this.difBox.y + (30 - difTextBounds.height) / 2);
+  }
+
+  onEncounterResults(outcome: EncounterOutcome, onEncounterChosen: any): void {
+    this.updateOutcome(outcome.roll, outcome.checkDifficulty);
+
     let timeline = this.scene.tweens.timeline({
       onComplete: onEncounterChosen,
     });
-
-    console.log("HELLO!");
-
-    for (var child of this.difficultyBar.getAll()) {
-      if (diceResult == 0) {
-        break;
-      }
-      let rect = child as Phaser.GameObjects.Rectangle;
-      // rect.alpha = 1.0;
-
-      timeline.add({
-        targets: rect,
-        alpha: 1.0,
-        duration: 500,
-      });
-
-      --diceResult;
-    }
+    timeline.add({
+      targets: this.rollText,
+      alpha: 1.0,
+      duration: 2000,
+    });
+    timeline.add({
+      targets: this.rollText,
+      alpha: 1.0,
+      duration: 1000,
+    });
 
     timeline.play();
   }
 }
 
 export class EncounterWindow extends Phaser.GameObjects.Container {
+  generateOutcome: any;
   onComplete: any;
   encounterCards: Array<EncounterCard>;
 
@@ -128,7 +145,7 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
       this.add(encounterCard);
       this.encounterCards.push(encounterCard);
       let callback = (pointer: any) => this.showSummary(encounters[i]);
-      encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(5, callback));
+      encounterCard.on('pointerdown', () => encounterCard.onEncounterResults(generateOutcome(encounters[i]), callback));
 
       let W = GRAPHICS_CONST.encounderCardWidth;
       let H = GRAPHICS_CONST.encounderCardHeight;

@@ -18,7 +18,8 @@ export let CONST = {
   repairAmount: 2,
 
   // Colors
-  difficulyLevelColor: [0xff6600, 0xffb700, 0xf7ff00],
+  // difficulyLevelColor: [0xff6600, 0xffb700, 0xf7ff00],
+  difficulyLevelColor: [0xff6600, 0x0cc918],
 }
 
 export let GRAPHICS_CONST = {

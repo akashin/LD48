@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { CONST } from '../const';
 import { Skill } from '../objects/skill';
-import { Submarine } from '../objects/submarine';
+import { Submarine, ResourceType } from '../objects/submarine';
 import { Encounter, EncounterWindow } from '../objects/encounter_window';
 import { generateEncounters } from '../logic/encounter_generation';
 import { randomInt } from '../utils/math'
@@ -91,14 +91,6 @@ export default class GameScene extends Phaser.Scene {
   resolveEncounter(encounter: Encounter) {
     if (this.encounterWindow != undefined && this.nextEncounters != undefined) {
       console.log("Resolving encounter ", encounter)
-
-      if (encounter.damage !== undefined) {
-        this.submarine.takeDamage(encounter.damage);
-      }
-      if (encounter.repair !== undefined) {
-        this.submarine.repair(encounter.repair);
-      }
-
       this.encounterWindow.destroy();
       this.nextEncounters = undefined;
       this.setDepth(this.currentDepth + 1);

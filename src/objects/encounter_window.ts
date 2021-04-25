@@ -223,6 +223,8 @@ export class EncounterWindow extends Phaser.GameObjects.Container {
     for (let encounterObject of this.encounterCards) {
       encounterObject.destroy();
     }
+    this.onComplete(encounter);
+    return;
 
     var summaryText = "Summary: ";
     if (encounter.damage !== undefined) {

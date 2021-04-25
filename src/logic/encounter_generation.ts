@@ -24,15 +24,15 @@ export function thresholdByDifficulty(difficulty: Difficulty): number {
 }
 
 function generateFightEncounter(difficulty: Difficulty): Encounter {
-  return new Encounter("Sharks", difficulty, EncounterType.FIGHT);
+  return new Encounter("", difficulty, EncounterType.FIGHT);
 }
 
 function generateSearchEncounter(difficulty: Difficulty): Encounter {
-  return new Encounter("Cave", difficulty, EncounterType.SEARCH);
+  return new Encounter("", difficulty, EncounterType.SEARCH);
 }
 
 function generateUpgradeEncounter(difficulty: Difficulty): Encounter {
-  return new Encounter("Science idea", difficulty, EncounterType.UPGRADE);
+  return new Encounter("", difficulty, EncounterType.UPGRADE);
 }
 
 export function generateEncounter(type: EncounterType, difficulty: Difficulty): Encounter {

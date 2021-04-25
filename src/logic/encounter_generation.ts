@@ -17,9 +17,9 @@ export function thresholdByDifficulty(difficulty: Difficulty): number {
     // Should give 50% success.
     // 11..20 out of 20
     case Difficulty.MEDIUM: return 11;
-    // Should give 20% success.
-    // 17..20 out of 20
-    case Difficulty.HARD: return 17;
+    // Should give 33% success.
+    // 15..20 out of 20
+    case Difficulty.HARD: return 15;
   }
 }
 

@@ -116,10 +116,10 @@ export default class GameScene extends Phaser.Scene {
       if (encounter.difficulty == Difficulty.HARD) {
         outcome.boostedAttributed[encounter.type] = 1;
       }
+      outcome.resourceTypeToAmount[encounterGeneratedResource(encounter.type)] = resourcesByDifficulty(encounter.difficulty);
     } else {
       outcome.text = "Failure!";
     }
-    outcome.resourceTypeToAmount[encounterGeneratedResource(encounter.type)] = resourcesByDifficulty(encounter.difficulty);
     outcome.resourceTypeToAmount[encounterConsumedResource(encounter.type)] = -resourcesByDifficulty(encounter.difficulty);
     console.log('Boosted attributes:', outcome.boostedAttributed);
     this.encounterOutcome = outcome;
